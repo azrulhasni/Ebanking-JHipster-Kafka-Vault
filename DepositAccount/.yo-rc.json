@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.azrul.ebanking.depositaccount"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "microservice",
+    "baseName": "DepositAccount",
+    "packageName": "com.azrul.ebanking.depositaccount",
+    "packageFolder": "com/azrul/ebanking/depositaccount",
+    "serverPort": "8083",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZjY1NDI5ZGU1YmFhYzE4NzhhNzNiNjc2YzkxMTU5OWFkMGU0YTdkMDZiYTRkY2QzOWMwZTYyODdmMzQ4YTRiZWQxMjAxOGU5ZTQ2MGU2OGUzNTFiOTA3M2RjYTJjMTZhNzAxZWQwMzU0MjhjM2NmZjEyMWE0OWVhMzdiYTA0Njc=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1600307844969,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}

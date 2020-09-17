@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.azrul.banking.gateway"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "gateway",
+    "baseName": "Gateway",
+    "packageName": "com.azrul.banking.gateway",
+    "packageFolder": "com/azrul/banking/gateway",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MDkyMGNjM2IxZmYyM2UwOWMyOTI4MjQ4ZWNiZGUwMjJhNzFjYWMzMGRmNDExMzY4MGMwMTMxNmRiMGYxMzViYmMyYjEwNDY5MmIzYTI3MjhhZjFiYzYxMGYwMmViNjVjMmMyMGE1MWFkZWM1ZDlkYzY2MmY1ZTEzNmFiYjI2OWM=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1599788793714,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}

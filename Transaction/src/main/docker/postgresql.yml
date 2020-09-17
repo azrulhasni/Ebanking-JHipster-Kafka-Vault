@@ -1,0 +1,11 @@
+version: '2'
+services:
+  transaction-postgresql:
+    image: postgres:12.1
+    # volumes:
+    #     - ~/volumes/jhipster/Transaction/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=Transaction
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
