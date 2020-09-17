@@ -38,6 +38,8 @@ eureka:
       git-commit: ${git.commit.id.abbrev:}
       git-branch: ${git.branch:}
 ribbon:
+  ReadTimeout: 600000
+  ConnectionTimeout: 600000
   eureka:
     enabled: true
 feign:
@@ -201,7 +203,7 @@ jhipster:
     license:
     license-url:
 kafka:
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: kafka.local:9092
   deposit-debit-request-topic: deposit-debit-request
   deposit-debit-response-topic: deposit-debit-response
   consumer:

@@ -56,13 +56,13 @@ public class TransactionKafkaResource {
         ProducerRecord<String, String> record = new ProducerRecord<String, String>(depositDebitRequestTopic,"AMMOUNT",ammount);
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, depositDebitResponseTopic.getBytes()));
         // post in kafka topic
-        RequestReplyFuture<String, String, String> sendAndReceive = kafkaTemplate.sendAndReceive(record);
+        RequestReplyFuture<String, String, String> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(10));
 
         // confirm if producer produced successfully
-        SendResult<String, String> sendResult = sendAndReceive.getSendFuture().get();
+        //SendResult<String, String> sendResult = sendAndReceive.getSendFuture().get();
 
         //print all headers
-        sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
+        //sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
 
         // get consumer record
         ConsumerRecord<String, String> consumerRecord = sendAndReceive.get();

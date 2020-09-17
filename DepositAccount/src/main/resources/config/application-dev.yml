@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    io.github.jhipster: DEBUG
-    com.azrul.ebanking.depositaccount: DEBUG
+    ROOT: ERROR
+    io.github.jhipster: ERROR
+    com.azrul.ebanking.depositaccount: ERROR
 
 eureka:
   instance:
