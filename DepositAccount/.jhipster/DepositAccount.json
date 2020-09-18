@@ -1,0 +1,43 @@
+{
+    "name": "DepositAccount",
+    "fields": [
+        {
+            "fieldName": "accountNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "productId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "openingDate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "balance",
+            "fieldType": "BigDecimal"
+        },
+        {
+            "fieldName": "lastTransactionDate",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20200918112400",
+    "entityTableName": "deposit_account",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "DepositAccount",
+    "applications": "*",
+    "microserviceName": "DepositAccount",
+    "angularJSSuffix": "banking"
+}

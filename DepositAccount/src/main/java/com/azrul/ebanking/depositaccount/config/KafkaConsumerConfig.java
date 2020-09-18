@@ -5,6 +5,7 @@
  */
 package com.azrul.ebanking.depositaccount.config;
 
+import com.azrul.ebanking.common.dto.TransactionDTO;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -22,10 +23,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.listener.GenericMessageListener;
-import org.springframework.kafka.listener.KafkaMessageListenerContainer;
-import org.springframework.kafka.listener.MessageListener;
+import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 /**
  *
@@ -36,12 +35,6 @@ public class KafkaConsumerConfig {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
-
-    @Value("${kafka.deposit-debit-response-topic}")
-    private String depositDebitResponseTopic;
-
-    @Value("${kafka.deposit-debit-request-topic}")
-    private String depositDebitRequestTopic;
 
     @Value("${kafka.consumer.group.id}")
     private String groupId;
@@ -54,51 +47,39 @@ public class KafkaConsumerConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                StringSerializer.class);
+                JsonSerializer.class);
         return props;
     }
 
-//     @Value("${kafka.consumergroup}")
-//	  private String consumerGroup;
     @Bean
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         return props;
     }
 
-//     @Bean
-//    public KafkaMessageListenerContainer<String, String> replyContainer(ConsumerFactory<String, String> cf) {
-//        ContainerProperties containerProperties = new ContainerProperties(depositDebitResponseTopic);
-//        containerProperties.setGroupId(groupId);
-//         containerProperties.setMessageListener(new MessageListener(){
-//            @Override
-//            public void onMessage(Object arg0) {
-//               System.out.println("From listener");
-//            }
-//        });
-//        return new KafkaMessageListenerContainer<>(cf, containerProperties);
-//    }
+
 
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new StringDeserializer());
+    public ConsumerFactory<String, TransactionDTO> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(TransactionDTO.class));
     }
     
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String,  TransactionDTO> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
     
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<String,  TransactionDTO> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, TransactionDTO>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TransactionDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setReplyTemplate(kafkaTemplate());
         return factory;
