@@ -141,9 +141,6 @@ spring:
     basename: i18n/messages
   main:
     allow-bean-definition-overriding: true
-  mvc:
-    favicon:
-      enabled: false
   task:
     execution:
       thread-name-prefix: transaction-task-
@@ -200,7 +197,7 @@ jhipster:
     contact-name:
     contact-url:
     contact-email:
-    license:
+    license: unlicensed
     license-url:
 kafka:
   bootstrap-servers: kafka.local:9092
