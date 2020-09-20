@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.azrul.ebanking.gateway_kafka"
     },
-    "jhipsterVersion": "6.10.3",
+    "jhipsterVersion": "6.8.0",
     "applicationType": "gateway",
     "baseName": "gateway_kafka",
     "packageName": "com.azrul.ebanking.gateway_kafka",
