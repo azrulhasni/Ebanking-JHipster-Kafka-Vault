@@ -44,11 +44,6 @@ public class DepositAccountService {
         depositAccount = depositAccountRepository.save(depositAccount);
         return depositAccountMapper.toDto(depositAccount);
     }
-    
-    public void save(DepositAccountDTO depositAccountDTO1, DepositAccountDTO depositAccountDTO2) {
-        save(depositAccountDTO1);
-        save(depositAccountDTO2);
-    }
 
     /**
      * Get all the depositAccounts.
@@ -63,6 +58,7 @@ public class DepositAccountService {
             .map(depositAccountMapper::toDto);
     }
 
+
     /**
      * Get one depositAccount by id.
      *
@@ -73,14 +69,6 @@ public class DepositAccountService {
     public Optional<DepositAccountDTO> findOne(Long id) {
         log.debug("Request to get DepositAccount : {}", id);
         return depositAccountRepository.findById(id)
-            .map(depositAccountMapper::toDto);
-    }
-    
-    
-    @Transactional(readOnly = true)
-    public Optional<DepositAccountDTO> findByAccountNumber(String accountNumber) {
-        log.debug("Request to get DepositAccount : {}", accountNumber);
-        return depositAccountRepository.findByAccountNumber(accountNumber)
             .map(depositAccountMapper::toDto);
     }
 

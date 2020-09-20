@@ -3,7 +3,6 @@ package com.azrul.ebanking.depositaccount.service.dto;
 import java.time.ZonedDateTime;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 /**
  * A DTO for the {@link com.azrul.ebanking.depositaccount.domain.DepositAccount} entity.
@@ -86,22 +85,19 @@ public class DepositAccountDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DepositAccountDTO)) {
             return false;
         }
 
-        DepositAccountDTO depositAccountDTO = (DepositAccountDTO) o;
-        if (depositAccountDTO.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), depositAccountDTO.getId());
+        return id != null && id.equals(((DepositAccountDTO) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "DepositAccountDTO{" +

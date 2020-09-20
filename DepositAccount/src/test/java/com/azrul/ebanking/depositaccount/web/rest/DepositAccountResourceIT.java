@@ -34,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link DepositAccountResource} REST controller.
  */
 @SpringBootTest(classes = DepositAccountApp.class)
-
 @AutoConfigureMockMvc
 @WithMockUser
 public class DepositAccountResourceIT {
@@ -116,7 +115,6 @@ public class DepositAccountResourceIT {
     @Transactional
     public void createDepositAccount() throws Exception {
         int databaseSizeBeforeCreate = depositAccountRepository.findAll().size();
-
         // Create the DepositAccount
         DepositAccountDTO depositAccountDTO = depositAccountMapper.toDto(depositAccount);
         restDepositAccountMockMvc.perform(post("/api/deposit-accounts")
@@ -194,7 +192,6 @@ public class DepositAccountResourceIT {
             .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE.intValue()))
             .andExpect(jsonPath("$.lastTransactionDate").value(sameInstant(DEFAULT_LAST_TRANSACTION_DATE)));
     }
-
     @Test
     @Transactional
     public void getNonExistingDepositAccount() throws Exception {
