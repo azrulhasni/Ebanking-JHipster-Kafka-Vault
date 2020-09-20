@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction
+  namespace: default
+  labels:
+    app: transaction
+spec:
+  selector:
+    app: transaction
+  ports:
+    - name: http
+      port: 8081
