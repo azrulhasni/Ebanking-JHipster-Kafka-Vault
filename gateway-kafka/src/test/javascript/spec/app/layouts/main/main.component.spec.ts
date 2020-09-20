@@ -19,7 +19,7 @@ describe('Component Tests', () => {
       TestBed.configureTestingModule({
         imports: [GatewayKafkaTestModule],
         declarations: [MainComponent],
-        providers: [Title]
+        providers: [Title],
       })
         .overrideTemplate(MainComponent, '')
         .compileComponents();

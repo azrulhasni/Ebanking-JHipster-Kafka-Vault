@@ -9,6 +9,6 @@ import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
   imports: [GatewayKafkaSharedLibsModule],
   declarations: [AlertComponent, AlertErrorComponent, LoginModalComponent, HasAnyAuthorityDirective],
   entryComponents: [LoginModalComponent],
-  exports: [GatewayKafkaSharedLibsModule, AlertComponent, AlertErrorComponent, LoginModalComponent, HasAnyAuthorityDirective]
+  exports: [GatewayKafkaSharedLibsModule, AlertComponent, AlertErrorComponent, LoginModalComponent, HasAnyAuthorityDirective],
 })
 export class GatewayKafkaSharedModule {}

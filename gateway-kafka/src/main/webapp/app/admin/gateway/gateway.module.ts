@@ -8,6 +8,6 @@ import { gatewayRoute } from './gateway.route';
 
 @NgModule({
   imports: [GatewayKafkaSharedModule, RouterModule.forChild([gatewayRoute])],
-  declarations: [GatewayComponent]
+  declarations: [GatewayComponent],
 })
 export class GatewayModule {}
