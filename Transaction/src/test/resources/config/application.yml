@@ -21,6 +21,9 @@ eureka:
     instanceId: Transaction:${spring.application.instance-id:${random.value}}
 
 spring:
+  profiles:
+    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+    #active: testcontainers
   application:
     name: Transaction
   datasource:
@@ -59,9 +62,6 @@ spring:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
-  mvc:
-    favicon:
-      enabled: false
   task:
     execution:
       thread-name-prefix: transaction-task-
@@ -91,7 +91,7 @@ jhipster:
     name: 'transactionApp'
   logging:
     # To test json console appender
-    use-json-format: true # By default, logs are in Json format
+    use-json-format: false
     logstash:
       enabled: false
       host: localhost
