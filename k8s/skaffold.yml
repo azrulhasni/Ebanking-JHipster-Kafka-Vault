@@ -1,0 +1,18 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: azrulhasni/ebanking-jhipster-kafka/depositaccount
+      context: ../DepositAccount
+      jib: {}
+    - image: azrulhasni/ebanking-jhipster-kafka/gateway
+      context: ../Gateway
+      jib: {}
+    - image: azrulhasni/ebanking-jhipster-kafka/transaction
+      context: ../Transaction
+      jib: {}
+  tagPolicy:
+    envTemplate:
+      template: '{{.IMAGE_NAME}}:latest'
+deploy:
+  kustomize: {}

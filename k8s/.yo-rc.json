@@ -1,0 +1,17 @@
+{
+  "generator-jhipster": {
+    "appsFolders": ["DepositAccount", "Gateway", "Transaction"],
+    "directoryPath": "../",
+    "serviceDiscoveryType": "eureka",
+    "jwtSecretKey": "NjUxZTQ4NTVlMzQzZDM4NThhMzlmNDU5OGZlNmFjZWY0NGU5NjE3YWJjNGM0YzgyYmNjYTJlNjlhMDM0MzQ1YWEwZmY4NGYyZTgyYzA0MTFiYmQ0YTQyYjhjYTUzZWJkZmZlNg==",
+    "dockerRepositoryName": "azrulhasni/ebanking-jhipster-kafka",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "default",
+    "kubernetesServiceType": "NodePort",
+    "kubernetesUseDynamicStorage": true,
+    "kubernetesStorageClassName": "",
+    "ingressDomain": "",
+    "monitoring": "no",
+    "istio": false
+  }
+}

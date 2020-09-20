@@ -1,0 +1,21 @@
+commonLabels:
+  app.kubernetes.io/genereted-by: JHipster
+
+resources:
+  # Individual apps
+  - depositaccount/depositaccount-deployment.yml
+  - depositaccount/depositaccount-service.yml
+  - depositaccount/depositaccount-postgresql.yml
+  - gateway/gateway-deployment.yml
+  - gateway/gateway-service.yml
+  - gateway/gateway-postgresql.yml
+  - transaction/transaction-deployment.yml
+  - transaction/transaction-service.yml
+  - transaction/transaction-postgresql.yml
+  # messagebroker
+  - messagebroker/kafka.yml
+  # service discovery eureka/consul
+  - registry/jhipster-registry.yml
+  - registry/application-configmap.yml
+
+patchesJson6902:
