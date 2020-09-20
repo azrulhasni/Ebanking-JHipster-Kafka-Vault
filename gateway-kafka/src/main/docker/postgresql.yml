@@ -1,0 +1,11 @@
+version: '2'
+services:
+  gateway_kafka-postgresql:
+    image: postgres:12.1
+    # volumes:
+    #     - ~/volumes/jhipster/gateway_kafka/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gateway_kafka
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
