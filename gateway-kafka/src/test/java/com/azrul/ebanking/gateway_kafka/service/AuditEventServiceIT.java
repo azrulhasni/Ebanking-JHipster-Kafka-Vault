@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest(classes = GatewayKafkaApp.class)
 @Transactional
-public class AuditEventServiceIT  {
+public class AuditEventServiceIT {
     @Autowired
     private AuditEventService auditEventService;
 
