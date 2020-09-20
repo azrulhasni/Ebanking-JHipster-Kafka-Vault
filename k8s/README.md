@@ -5,12 +5,12 @@
 You will need to push your image to a registry. If you have not done so, use the following commands to tag and push the images:
 
 ```
-$ docker image tag depositaccount azrulhasni/ebanking-jhipster-kafka/depositaccount
-$ docker push azrulhasni/ebanking-jhipster-kafka/depositaccount
-$ docker image tag gateway azrulhasni/ebanking-jhipster-kafka/gateway
-$ docker push azrulhasni/ebanking-jhipster-kafka/gateway
-$ docker image tag transaction azrulhasni/ebanking-jhipster-kafka/transaction
-$ docker push azrulhasni/ebanking-jhipster-kafka/transaction
+$ docker image tag depositaccount azrulhasni/depositaccount
+$ docker push azrulhasni/depositaccount
+$ docker image tag transaction azrulhasni/transaction
+$ docker push azrulhasni/transaction
+$ docker image tag gateway_kafka azrulhasni/gateway_kafka
+$ docker push azrulhasni/gateway_kafka
 ```
 
 ## Deployment
@@ -38,7 +38,7 @@ skaffold run [or] skaffold deploy
 Use these commands to find your application's IP addresses:
 
 ```
-$ kubectl get svc gateway
+$ kubectl get svc gateway_kafka
 ```
 
 ## Scaling your deployments

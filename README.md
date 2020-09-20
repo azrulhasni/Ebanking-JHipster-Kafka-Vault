@@ -316,15 +316,15 @@ To generate the missing Docker image(s), please run:
 remote registry:
 
   ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/ebanking-jhipster-kafka/depositaccount in
+-Djib.to.image=azrulhasni/depositaccount in
 /Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/DepositAccount
 
   ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/ebanking-jhipster-kafka/gateway in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Gateway
+-Djib.to.image=azrulhasni/gateway_kafka in
+/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/gateway_kafka
 
   ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/ebanking-jhipster-kafka/transaction in
+-Djib.to.image=azrulhasni/transaction in
 /Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Transaction
 
 You can deploy all your apps by running the following kubectl command:

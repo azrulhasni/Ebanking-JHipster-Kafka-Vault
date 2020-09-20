@@ -28,8 +28,8 @@ logSummary() {
 default() {
     kubectl apply -f registry/
     kubectl apply -f depositaccount/
-    kubectl apply -f gateway/
     kubectl apply -f transaction/
+    kubectl apply -f gateway_kafka/
     kubectl apply -f messagebroker/
 
 }

@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transaction
+  name: gateway_kafka
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: transaction
+      app: gateway_kafka
       version: 'v1'
   template:
     metadata:
       labels:
-        app: transaction
+        app: gateway_kafka
         version: 'v1'
     spec:
       affinity:
@@ -24,7 +24,7 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - transaction
+                        - gateway_kafka
                 topologyKey: kubernetes.io/hostname
               weight: 100
       initContainers:
@@ -36,7 +36,7 @@ spec:
             - |
               while true
               do
-                rt=$(nc -z -w 1 transaction-postgresql 5432)
+                rt=$(nc -z -w 1 gateway_kafka-postgresql 5432)
                 if [ $? -eq 0 ]; then
                   echo "DB is UP"
                   break
@@ -45,8 +45,8 @@ spec:
                 sleep 10
               done
       containers:
-        - name: transaction-app
-          image: azrulhasni/transaction
+        - name: gateway_kafka-app
+          image: azrulhasni/gateway_kafka
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
@@ -60,30 +60,14 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: http://admin:${jhipster.registry.password}@jhipster-registry.default.svc.cluster.local:8761/eureka/
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://transaction-postgresql.default.svc.cluster.local:5432/Transaction
+              value: jdbc:postgresql://gateway_kafka-postgresql.default.svc.cluster.local:5432/gateway_kafka
             - name: SPRING_DATASOURCE_USERNAME
-              value: Transaction
+              value: gateway_kafka
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: transaction-postgresql
+                  name: gateway_kafka-postgresql
                   key: postgresql-password
-            - name: KAFKA_CONSUMER_KEY_DESERIALIZER
-              value: 'org.apache.kafka.common.serialization.StringDeserializer'
-            - name: KAFKA_CONSUMER_VALUE_DESERIALIZER
-              value: 'org.apache.kafka.common.serialization.StringDeserializer'
-            - name: KAFKA_CONSUMER_BOOTSTRAP_SERVERS
-              value: 'jhipster-kafka.default.svc.cluster.local:9092'
-            - name: KAFKA_CONSUMER_GROUP_ID
-              value: 'transaction'
-            - name: KAFKA_CONSUMER_AUTO_OFFSET_RESET
-              value: 'earliest'
-            - name: KAFKA_PRODUCER_BOOTSTRAP_SERVERS
-              value: 'jhipster-kafka.default.svc.cluster.local:9092'
-            - name: KAFKA_PRODUCER_KEY_DESERIALIZER
-              value: 'org.apache.kafka.common.serialization.StringDeserializer'
-            - name: KAFKA_PRODUCER_VALUE_DESERIALIZER
-              value: 'org.apache.kafka.common.serialization.StringDeserializer'
             - name: SPRING_SLEUTH_PROPAGATION_KEYS
               value: 'x-request-id,x-ot-span-context'
             - name: JAVA_OPTS
@@ -97,7 +81,7 @@ spec:
               cpu: '1'
           ports:
             - name: http
-              containerPort: 8081
+              containerPort: 8080
           readinessProbe:
             httpGet:
               path: /management/health

@@ -6,12 +6,12 @@ resources:
   - depositaccount/depositaccount-deployment.yml
   - depositaccount/depositaccount-service.yml
   - depositaccount/depositaccount-postgresql.yml
-  - gateway/gateway-deployment.yml
-  - gateway/gateway-service.yml
-  - gateway/gateway-postgresql.yml
   - transaction/transaction-deployment.yml
   - transaction/transaction-service.yml
   - transaction/transaction-postgresql.yml
+  - gateway_kafka/gateway_kafka-deployment.yml
+  - gateway_kafka/gateway_kafka-service.yml
+  - gateway_kafka/gateway_kafka-postgresql.yml
   # messagebroker
   - messagebroker/kafka.yml
   # service discovery eureka/consul

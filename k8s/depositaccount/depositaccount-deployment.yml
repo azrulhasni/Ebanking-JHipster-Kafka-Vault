@@ -46,7 +46,7 @@ spec:
               done
       containers:
         - name: depositaccount-app
-          image: azrulhasni/ebanking-jhipster-kafka/depositaccount
+          image: azrulhasni/depositaccount
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
