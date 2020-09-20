@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.azrul.ebanking.transaction"
     },
-    "jhipsterVersion": "6.10.3",
+    "jhipsterVersion": "6.8.0",
     "applicationType": "microservice",
     "baseName": "Transaction",
     "packageName": "com.azrul.ebanking.transaction",
