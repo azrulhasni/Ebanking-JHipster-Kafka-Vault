@@ -121,14 +121,14 @@ gateway
 
 ? **[Beta] Do you want to make it reactive with Spring WebFlux?** No
 
-? **What is the base name of your application?** Gateway_Kafka
+? **What is the base name of your application?** GatewayKafka
 
 ? **As you are running in a microservice architecture, on which port would like
 yo**
 
 **ur server to run? It should be unique to avoid port conflicts.** 8080
 
-? **What is your default Java package name?** com.azrul.ebanking.gateway_kafka
+? **What is your default Java package name?** com.azrul.ebanking.gatewaykafka
 
 ? **Which service discovery server do you want to use?** JHipster Registry (uses
 Eur
@@ -177,7 +177,7 @@ ipster
 ? **Would you like to install other generators from the JHipster Marketplace?**
 (y/N
 
-) No
+) No
 
  
 

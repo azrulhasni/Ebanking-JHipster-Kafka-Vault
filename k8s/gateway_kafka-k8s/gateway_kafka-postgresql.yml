@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gateway_kafka-postgresql-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gateway_kafka-postgresql
+  namespace: default
+  labels:
+    app: gateway_kafka-postgresql
+type: Opaque
+data:
+  postgresql-password: ZmFmNzc3MzY2ZDhkNGQ2NTAyMjg3N2Q5NTRiMTA5NmIyZWQ5M2Q2OTllODRhNzM5NmM0YmVjNGQ2ODg0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway_kafka-postgresql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway_kafka-postgresql
+  template:
+    metadata:
+      labels:
+        app: gateway_kafka-postgresql
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gateway_kafka-postgresql-pvc
+      containers:
+        - name: postgres
+          image: postgres:12.3
+          env:
+            - name: POSTGRES_USER
+              value: Gateway_Kafka
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gateway_kafka-postgresql
+                  key: postgresql-password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway_kafka-postgresql
+  namespace: default
+spec:
+  selector:
+    app: gateway_kafka-postgresql
+  ports:
+    - port: 5432

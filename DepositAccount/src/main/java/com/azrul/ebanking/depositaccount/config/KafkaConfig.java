@@ -38,13 +38,13 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @Configuration
 class KafkaConfig {
 
-    @Value("${kafka.bootstrap-servers}")
+    @Value("${kafka.bootstrap-servers:kafka.local:9092}")
     private String bootstrapServers;
 
-    @Value("${kafka.deposit-debit-response-topic}")
+    @Value("${kafka.deposit-debit-response-topic:deposit-debit-response}")
     private String depositDebitResponseTopic;
 
-    @Value("${kafka.consumer.group.id}")
+    @Value("${kafka.consumer.group.id:transaction}")
     private String groupId;
 
     @Bean

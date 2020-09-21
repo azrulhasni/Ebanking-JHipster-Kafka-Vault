@@ -3,19 +3,17 @@ commonLabels:
 
 resources:
   # Individual apps
-  - depositaccount/depositaccount-deployment.yml
-  - depositaccount/depositaccount-service.yml
-  - depositaccount/depositaccount-postgresql.yml
-  - transaction/transaction-deployment.yml
-  - transaction/transaction-service.yml
-  - transaction/transaction-postgresql.yml
-  - gateway_kafka/gateway_kafka-deployment.yml
-  - gateway_kafka/gateway_kafka-service.yml
-  - gateway_kafka/gateway_kafka-postgresql.yml
-  # messagebroker
-  - messagebroker/kafka.yml
+  - depositaccount-k8s/depositaccount-deployment.yml
+  - depositaccount-k8s/depositaccount-service.yml
+  - depositaccount-k8s/depositaccount-postgresql.yml
+  - gateway_kafka-k8s/gateway_kafka-deployment.yml
+  - gateway_kafka-k8s/gateway_kafka-service.yml
+  - gateway_kafka-k8s/gateway_kafka-postgresql.yml
+  - transaction-k8s/transaction-deployment.yml
+  - transaction-k8s/transaction-service.yml
+  - transaction-k8s/transaction-postgresql.yml
   # service discovery eureka/consul
-  - registry/jhipster-registry.yml
-  - registry/application-configmap.yml
+  - registry-k8s/jhipster-registry.yml
+  - registry-k8s/application-configmap.yml
 
 patchesJson6902:

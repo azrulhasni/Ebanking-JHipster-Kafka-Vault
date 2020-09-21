@@ -1,9 +1,9 @@
 {
   "generator-jhipster": {
-    "appsFolders": ["DepositAccount", "Transaction", "gateway-kafka"],
+    "appsFolders": ["DepositAccount", "Gateway-Kafka", "Transaction"],
     "directoryPath": "../",
     "serviceDiscoveryType": "eureka",
-    "jwtSecretKey": "NDI1NzM2YTY0OGNjYmVmN2Y3M2I3N2Q0NzdlZTk3ZGUzMGVlMzY4NmZjMTBjODVhMTc4NDY3ZDBhMjM0NTEzOTdlOWFjYmI0ZDk4MzcyNGJmZDkxNTNhZDlmYWM2MjJjYmEzZQ==",
+    "jwtSecretKey": "Yjc5NmY1ZTJmMjU0YjhlMGM4YjYwZTI4NWRjYTI1MjVmMTBhNDIzYzMxNWFmODAyM2IwNTY5YTk0NjdkYTUzZWZiODU3YmJiNTg1OTUyNTk4YmE2OTVhZWExMGRkOGIxMmI2ZQ==",
     "dockerRepositoryName": "azrulhasni",
     "dockerPushCommand": "docker push",
     "kubernetesNamespace": "default",

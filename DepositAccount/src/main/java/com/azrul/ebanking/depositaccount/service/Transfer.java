@@ -28,7 +28,7 @@ public class Transfer {
         this.depositAccountService = depositAccountService;
     }
 
-    @KafkaListener(topics = "${kafka.deposit-debit-request-topic}")
+    @KafkaListener(topics = "${kafka.deposit-debit-request-topic:deposit-debit-request}")
     @SendTo
     public Transaction transact(final Transaction trx) throws InterruptedException {
         System.out.println("Ammount:" + trx.getAmount());

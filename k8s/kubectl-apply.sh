@@ -20,17 +20,14 @@ exit 0
 
 logSummary() {
     echo ""
-    echo "#####################################################"
-    echo "Please find the below useful endpoints,"
-    echo "#####################################################"
 }
 
 default() {
-    kubectl apply -f registry/
-    kubectl apply -f depositaccount/
-    kubectl apply -f transaction/
-    kubectl apply -f gateway_kafka/
-    kubectl apply -f messagebroker/
+    suffix=k8s
+    kubectl apply -f registry-${suffix}/
+    kubectl apply -f depositaccount-${suffix}/
+    kubectl apply -f gateway_kafka-${suffix}/
+    kubectl apply -f transaction-${suffix}/
 
 }
 

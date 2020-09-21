@@ -5,11 +5,11 @@ build:
     - image: azrulhasni/depositaccount
       context: ../DepositAccount
       jib: {}
+    - image: azrulhasni/gateway_kafka
+      context: ../Gateway-Kafka
+      jib: {}
     - image: azrulhasni/transaction
       context: ../Transaction
-      jib: {}
-    - image: azrulhasni/gateway_kafka
-      context: ../gateway-kafka
       jib: {}
   tagPolicy:
     envTemplate:

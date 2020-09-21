@@ -27,10 +27,10 @@ import org.springframework.kafka.support.KafkaHeaders;
 @RequestMapping("/api/transaction-kafka")
 public class TransactionKafkaResource {
 
-    @Value("${kafka.deposit-debit-request-topic}")
+    @Value("${kafka.deposit-debit-request-topic:deposit-debit-request}")
     private String depositDebitRequestTopic;
 
-    @Value("${kafka.deposit-debit-response-topic}")
+    @Value("${kafka.deposit-debit-response-topic:deposit-debit-response}")
     private String depositDebitResponseTopic;
     
     @Autowired
