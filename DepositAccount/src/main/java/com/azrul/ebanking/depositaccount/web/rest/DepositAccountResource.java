@@ -1,20 +1,14 @@
 package com.azrul.ebanking.depositaccount.web.rest;
 
+import com.azrul.ebanking.depositaccount.domain.DepositAccount;
 import com.azrul.ebanking.depositaccount.service.DepositAccountService;
 import com.azrul.ebanking.depositaccount.web.rest.errors.BadRequestAlertException;
-import com.azrul.ebanking.depositaccount.service.dto.DepositAccountDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,17 +40,17 @@ public class DepositAccountResource {
     /**
      * {@code POST  /deposit-accounts} : Create a new depositAccount.
      *
-     * @param depositAccountDTO the depositAccountDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new depositAccountDTO, or with status {@code 400 (Bad Request)} if the depositAccount has already an ID.
+     * @param depositAccount the depositAccount to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new depositAccount, or with status {@code 400 (Bad Request)} if the depositAccount has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/deposit-accounts")
-    public ResponseEntity<DepositAccountDTO> createDepositAccount(@RequestBody DepositAccountDTO depositAccountDTO) throws URISyntaxException {
-        log.debug("REST request to save DepositAccount : {}", depositAccountDTO);
-        if (depositAccountDTO.getId() != null) {
+    public ResponseEntity<DepositAccount> createDepositAccount(@RequestBody DepositAccount depositAccount) throws URISyntaxException {
+        log.debug("REST request to save DepositAccount : {}", depositAccount);
+        if (depositAccount.getId() != null) {
             throw new BadRequestAlertException("A new depositAccount cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        DepositAccountDTO result = depositAccountService.save(depositAccountDTO);
+        DepositAccount result = depositAccountService.save(depositAccount);
         return ResponseEntity.created(new URI("/api/deposit-accounts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -65,55 +59,52 @@ public class DepositAccountResource {
     /**
      * {@code PUT  /deposit-accounts} : Updates an existing depositAccount.
      *
-     * @param depositAccountDTO the depositAccountDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated depositAccountDTO,
-     * or with status {@code 400 (Bad Request)} if the depositAccountDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the depositAccountDTO couldn't be updated.
+     * @param depositAccount the depositAccount to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated depositAccount,
+     * or with status {@code 400 (Bad Request)} if the depositAccount is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the depositAccount couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/deposit-accounts")
-    public ResponseEntity<DepositAccountDTO> updateDepositAccount(@RequestBody DepositAccountDTO depositAccountDTO) throws URISyntaxException {
-        log.debug("REST request to update DepositAccount : {}", depositAccountDTO);
-        if (depositAccountDTO.getId() == null) {
+    public ResponseEntity<DepositAccount> updateDepositAccount(@RequestBody DepositAccount depositAccount) throws URISyntaxException {
+        log.debug("REST request to update DepositAccount : {}", depositAccount);
+        if (depositAccount.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        DepositAccountDTO result = depositAccountService.save(depositAccountDTO);
+        DepositAccount result = depositAccountService.save(depositAccount);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, depositAccountDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, depositAccount.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code GET  /deposit-accounts} : get all the depositAccounts.
      *
-     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of depositAccounts in body.
      */
     @GetMapping("/deposit-accounts")
-    public ResponseEntity<List<DepositAccountDTO>> getAllDepositAccounts(Pageable pageable) {
-        log.debug("REST request to get a page of DepositAccounts");
-        Page<DepositAccountDTO> page = depositAccountService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public List<DepositAccount> getAllDepositAccounts() {
+        log.debug("REST request to get all DepositAccounts");
+        return depositAccountService.findAll();
     }
 
     /**
      * {@code GET  /deposit-accounts/:id} : get the "id" depositAccount.
      *
-     * @param id the id of the depositAccountDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the depositAccountDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the depositAccount to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the depositAccount, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/deposit-accounts/{id}")
-    public ResponseEntity<DepositAccountDTO> getDepositAccount(@PathVariable Long id) {
+    public ResponseEntity<DepositAccount> getDepositAccount(@PathVariable Long id) {
         log.debug("REST request to get DepositAccount : {}", id);
-        Optional<DepositAccountDTO> depositAccountDTO = depositAccountService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(depositAccountDTO);
+        Optional<DepositAccount> depositAccount = depositAccountService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(depositAccount);
     }
 
     /**
      * {@code DELETE  /deposit-accounts/:id} : delete the "id" depositAccount.
      *
-     * @param id the id of the depositAccountDTO to delete.
+     * @param id the id of the depositAccount to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/deposit-accounts/{id}")

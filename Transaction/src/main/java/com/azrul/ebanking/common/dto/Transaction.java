@@ -3,25 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.azrul.ebanking.common.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  * @author azrul
  */
-public class TransactionDTO {
-    @JsonProperty("fromAccountNumber")
+
+//Added
+public class Transaction {
     private String fromAccountNumber;
-    
-    @JsonProperty("toAccountNumber")
     private String toAccountNumber;
-    
-    @JsonProperty("ammount")
-    private String ammount;
-    
-    @JsonProperty("finalBalance")
+    private String amount;
     private String finalBalance;
 
     /**
@@ -55,15 +53,15 @@ public class TransactionDTO {
     /**
      * @return the ammount
      */
-    public String getAmmount() {
-        return ammount;
+    public String getAmount() {
+        return amount;
     }
 
     /**
      * @param ammount the ammount to set
      */
-    public void setAmmount(String ammount) {
-        this.ammount = ammount;
+    public void setAmount(String ammount) {
+        this.amount = ammount;
     }
 
     /**

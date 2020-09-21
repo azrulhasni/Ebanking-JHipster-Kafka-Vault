@@ -4,8 +4,6 @@ import com.azrul.ebanking.depositaccount.DepositAccountApp;
 import com.azrul.ebanking.depositaccount.domain.DepositAccount;
 import com.azrul.ebanking.depositaccount.repository.DepositAccountRepository;
 import com.azrul.ebanking.depositaccount.service.DepositAccountService;
-import com.azrul.ebanking.depositaccount.service.dto.DepositAccountDTO;
-import com.azrul.ebanking.depositaccount.service.mapper.DepositAccountMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,14 +51,8 @@ public class DepositAccountResourceIT {
     private static final BigDecimal DEFAULT_BALANCE = new BigDecimal(1);
     private static final BigDecimal UPDATED_BALANCE = new BigDecimal(2);
 
-    private static final ZonedDateTime DEFAULT_LAST_TRANSACTION_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_LAST_TRANSACTION_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
     @Autowired
     private DepositAccountRepository depositAccountRepository;
-
-    @Autowired
-    private DepositAccountMapper depositAccountMapper;
 
     @Autowired
     private DepositAccountService depositAccountService;
@@ -85,8 +77,7 @@ public class DepositAccountResourceIT {
             .productId(DEFAULT_PRODUCT_ID)
             .openingDate(DEFAULT_OPENING_DATE)
             .status(DEFAULT_STATUS)
-            .balance(DEFAULT_BALANCE)
-            .lastTransactionDate(DEFAULT_LAST_TRANSACTION_DATE);
+            .balance(DEFAULT_BALANCE);
         return depositAccount;
     }
     /**
@@ -101,8 +92,7 @@ public class DepositAccountResourceIT {
             .productId(UPDATED_PRODUCT_ID)
             .openingDate(UPDATED_OPENING_DATE)
             .status(UPDATED_STATUS)
-            .balance(UPDATED_BALANCE)
-            .lastTransactionDate(UPDATED_LAST_TRANSACTION_DATE);
+            .balance(UPDATED_BALANCE);
         return depositAccount;
     }
 
@@ -116,10 +106,9 @@ public class DepositAccountResourceIT {
     public void createDepositAccount() throws Exception {
         int databaseSizeBeforeCreate = depositAccountRepository.findAll().size();
         // Create the DepositAccount
-        DepositAccountDTO depositAccountDTO = depositAccountMapper.toDto(depositAccount);
         restDepositAccountMockMvc.perform(post("/api/deposit-accounts")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(depositAccountDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(depositAccount)))
             .andExpect(status().isCreated());
 
         // Validate the DepositAccount in the database
@@ -131,7 +120,6 @@ public class DepositAccountResourceIT {
         assertThat(testDepositAccount.getOpeningDate()).isEqualTo(DEFAULT_OPENING_DATE);
         assertThat(testDepositAccount.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testDepositAccount.getBalance()).isEqualTo(DEFAULT_BALANCE);
-        assertThat(testDepositAccount.getLastTransactionDate()).isEqualTo(DEFAULT_LAST_TRANSACTION_DATE);
     }
 
     @Test
@@ -141,12 +129,11 @@ public class DepositAccountResourceIT {
 
         // Create the DepositAccount with an existing ID
         depositAccount.setId(1L);
-        DepositAccountDTO depositAccountDTO = depositAccountMapper.toDto(depositAccount);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDepositAccountMockMvc.perform(post("/api/deposit-accounts")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(depositAccountDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(depositAccount)))
             .andExpect(status().isBadRequest());
 
         // Validate the DepositAccount in the database
@@ -170,8 +157,7 @@ public class DepositAccountResourceIT {
             .andExpect(jsonPath("$.[*].productId").value(hasItem(DEFAULT_PRODUCT_ID)))
             .andExpect(jsonPath("$.[*].openingDate").value(hasItem(sameInstant(DEFAULT_OPENING_DATE))))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS)))
-            .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE.intValue())))
-            .andExpect(jsonPath("$.[*].lastTransactionDate").value(hasItem(sameInstant(DEFAULT_LAST_TRANSACTION_DATE))));
+            .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE.intValue())));
     }
     
     @Test
@@ -189,8 +175,7 @@ public class DepositAccountResourceIT {
             .andExpect(jsonPath("$.productId").value(DEFAULT_PRODUCT_ID))
             .andExpect(jsonPath("$.openingDate").value(sameInstant(DEFAULT_OPENING_DATE)))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS))
-            .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE.intValue()))
-            .andExpect(jsonPath("$.lastTransactionDate").value(sameInstant(DEFAULT_LAST_TRANSACTION_DATE)));
+            .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE.intValue()));
     }
     @Test
     @Transactional
@@ -204,7 +189,7 @@ public class DepositAccountResourceIT {
     @Transactional
     public void updateDepositAccount() throws Exception {
         // Initialize the database
-        depositAccountRepository.saveAndFlush(depositAccount);
+        depositAccountService.save(depositAccount);
 
         int databaseSizeBeforeUpdate = depositAccountRepository.findAll().size();
 
@@ -217,13 +202,11 @@ public class DepositAccountResourceIT {
             .productId(UPDATED_PRODUCT_ID)
             .openingDate(UPDATED_OPENING_DATE)
             .status(UPDATED_STATUS)
-            .balance(UPDATED_BALANCE)
-            .lastTransactionDate(UPDATED_LAST_TRANSACTION_DATE);
-        DepositAccountDTO depositAccountDTO = depositAccountMapper.toDto(updatedDepositAccount);
+            .balance(UPDATED_BALANCE);
 
         restDepositAccountMockMvc.perform(put("/api/deposit-accounts")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(depositAccountDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(updatedDepositAccount)))
             .andExpect(status().isOk());
 
         // Validate the DepositAccount in the database
@@ -235,7 +218,6 @@ public class DepositAccountResourceIT {
         assertThat(testDepositAccount.getOpeningDate()).isEqualTo(UPDATED_OPENING_DATE);
         assertThat(testDepositAccount.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testDepositAccount.getBalance()).isEqualTo(UPDATED_BALANCE);
-        assertThat(testDepositAccount.getLastTransactionDate()).isEqualTo(UPDATED_LAST_TRANSACTION_DATE);
     }
 
     @Test
@@ -243,13 +225,10 @@ public class DepositAccountResourceIT {
     public void updateNonExistingDepositAccount() throws Exception {
         int databaseSizeBeforeUpdate = depositAccountRepository.findAll().size();
 
-        // Create the DepositAccount
-        DepositAccountDTO depositAccountDTO = depositAccountMapper.toDto(depositAccount);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDepositAccountMockMvc.perform(put("/api/deposit-accounts")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(depositAccountDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(depositAccount)))
             .andExpect(status().isBadRequest());
 
         // Validate the DepositAccount in the database
@@ -261,7 +240,7 @@ public class DepositAccountResourceIT {
     @Transactional
     public void deleteDepositAccount() throws Exception {
         // Initialize the database
-        depositAccountRepository.saveAndFlush(depositAccount);
+        depositAccountService.save(depositAccount);
 
         int databaseSizeBeforeDelete = depositAccountRepository.findAll().size();
 

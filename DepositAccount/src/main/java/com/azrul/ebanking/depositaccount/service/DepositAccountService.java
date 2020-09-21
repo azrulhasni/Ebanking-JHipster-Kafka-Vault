@@ -2,16 +2,13 @@ package com.azrul.ebanking.depositaccount.service;
 
 import com.azrul.ebanking.depositaccount.domain.DepositAccount;
 import com.azrul.ebanking.depositaccount.repository.DepositAccountRepository;
-import com.azrul.ebanking.depositaccount.service.dto.DepositAccountDTO;
-import com.azrul.ebanking.depositaccount.service.mapper.DepositAccountMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,37 +22,43 @@ public class DepositAccountService {
 
     private final DepositAccountRepository depositAccountRepository;
 
-    private final DepositAccountMapper depositAccountMapper;
-
-    public DepositAccountService(DepositAccountRepository depositAccountRepository, DepositAccountMapper depositAccountMapper) {
+    public DepositAccountService(DepositAccountRepository depositAccountRepository) {
         this.depositAccountRepository = depositAccountRepository;
-        this.depositAccountMapper = depositAccountMapper;
     }
 
     /**
      * Save a depositAccount.
      *
-     * @param depositAccountDTO the entity to save.
+     * @param depositAccount the entity to save.
      * @return the persisted entity.
      */
-    public DepositAccountDTO save(DepositAccountDTO depositAccountDTO) {
-        log.debug("Request to save DepositAccount : {}", depositAccountDTO);
-        DepositAccount depositAccount = depositAccountMapper.toEntity(depositAccountDTO);
-        depositAccount = depositAccountRepository.save(depositAccount);
-        return depositAccountMapper.toDto(depositAccount);
+    public DepositAccount save(DepositAccount depositAccount) {
+        log.debug("Request to save DepositAccount : {}", depositAccount);
+        return depositAccountRepository.save(depositAccount);
+    }
+    
+    //Added
+    public void save(DepositAccount depositAccount1, DepositAccount depositAccount2) {
+        save(depositAccount1);
+        save(depositAccount2);
+    }
+    
+    //Added
+    @Transactional(readOnly = true)
+    public Optional<DepositAccount> findByAccountNumber(String accountNumber) {
+        log.debug("Request to get DepositAccount : {}", accountNumber);
+        return depositAccountRepository.findByAccountNumber(accountNumber);
     }
 
     /**
      * Get all the depositAccounts.
      *
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<DepositAccountDTO> findAll(Pageable pageable) {
+    public List<DepositAccount> findAll() {
         log.debug("Request to get all DepositAccounts");
-        return depositAccountRepository.findAll(pageable)
-            .map(depositAccountMapper::toDto);
+        return depositAccountRepository.findAll();
     }
 
 
@@ -66,10 +69,9 @@ public class DepositAccountService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<DepositAccountDTO> findOne(Long id) {
+    public Optional<DepositAccount> findOne(Long id) {
         log.debug("Request to get DepositAccount : {}", id);
-        return depositAccountRepository.findById(id)
-            .map(depositAccountMapper::toDto);
+        return depositAccountRepository.findById(id);
     }
 
     /**

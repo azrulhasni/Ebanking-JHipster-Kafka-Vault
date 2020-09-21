@@ -35,7 +35,7 @@ describe('Component Tests', () => {
 
     describe('page title', () => {
       let routerState: any;
-      const defaultPageTitle = 'Gateway_kafka';
+      const defaultPageTitle = 'Gateway_Kafka';
       const parentRoutePageTitle = 'parentTitle';
       const childRoutePageTitle = 'childTitle';
       const navigationEnd = new NavigationEnd(1, '', '');

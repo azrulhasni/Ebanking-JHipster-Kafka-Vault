@@ -35,7 +35,7 @@ public class GatewayKafkaApp {
     }
 
     /**
-     * Initializes gateway_kafka.
+     * Initializes Gateway_Kafka.
      * <p>
      * Spring profiles can be configured with a program argument --spring.profiles.active=your-active-profile
      * <p>

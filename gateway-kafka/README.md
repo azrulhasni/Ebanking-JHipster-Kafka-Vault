@@ -1,4 +1,4 @@
-# gateway_kafka
+# Gateway_Kafka
 
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
 
@@ -110,7 +110,7 @@ update src/main/webapp/app/app.module.ts
 
 ### Packaging as jar
 
-To build the final jar and optimize the gateway_kafka application for production, run:
+To build the final jar and optimize the Gateway_Kafka application for production, run:
 
 ```
 

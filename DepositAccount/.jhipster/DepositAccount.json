@@ -20,17 +20,13 @@
     {
       "fieldName": "balance",
       "fieldType": "BigDecimal"
-    },
-    {
-      "fieldName": "lastTransactionDate",
-      "fieldType": "ZonedDateTime"
     }
   ],
   "relationships": [],
-  "changelogDate": "20200918112400",
+  "changelogDate": "20200921034437",
   "entityTableName": "deposit_account",
-  "dto": "mapstruct",
-  "pagination": "infinite-scroll",
+  "dto": "no",
+  "pagination": "no",
   "service": "serviceClass",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
@@ -38,6 +34,5 @@
   "embedded": false,
   "clientRootFolder": "DepositAccount",
   "applications": "*",
-  "microserviceName": "DepositAccount",
-  "angularJSSuffix": "banking"
+  "microserviceName": "DepositAccount"
 }

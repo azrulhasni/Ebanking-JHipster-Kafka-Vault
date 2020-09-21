@@ -1,0 +1,14 @@
+
+  
+entity DepositAccount{  
+    accountNumber String,  
+    productId String,  
+    openingDate ZonedDateTime,  
+    status Integer,  
+    balance BigDecimal  
+}  
+
+  
+// Set service options to all except few  
+service all with serviceClass
+

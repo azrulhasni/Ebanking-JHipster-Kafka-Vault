@@ -44,8 +44,8 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:gateway_kafka;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: gateway_kafka
+    url: jdbc:h2:file:./target/h2db/db/gateway_kafka;DB_CLOSE_DELAY=-1
+    username: Gateway_Kafka
     password:
     hikari:
       poolName: Hikari
@@ -107,7 +107,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: MmNjOTY2MjZiNzE5MjUxYmRlMmZlODk0NmNmZWRkYjFjY2VmN2E4ZTI1Nzg3OTNiN2UxNGNkM2U2YzY5M2EzNDJiMmIzMjcwNGJjZjBhZTM5Njg5ZDYwMjY0NDU3MWQyNDMwNDRhM2ExMGMzZDEwMzViMjNkOTk3OTE0ZmM5NWU=
+        base64-secret: ZDk0MGQ2NjliODI2MGI4OTJmNzI1ZGY2ZDgxYThjZjk2Y2NiNGY0MWQzYjRiNTk2OGZmZmM5ZjBmNmRlNjQ2MTlmOTVkNWQxYmU5NzU0ZmIzMWEwZTZmNzBlNTRjMmE3MTg3NjQ2OTg0MDI0MzMwN2RlYmNjZmNiMzhkMDFhNGQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

@@ -38,6 +38,10 @@ eureka:
       git-commit: ${git.commit.id.abbrev:}
       git-branch: ${git.branch:}
 ribbon:
+  #Added
+  ReadTimeout: 600000
+  ConnectionTimeout: 600000
+  #--Added
   eureka:
     enabled: true
 # See http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html
@@ -46,6 +50,10 @@ zuul: # those values must be configured depending on the application specific ne
   host:
     max-total-connections: 1000
     max-per-route-connections: 100
+    #Added
+    connect-timeout-millis: 600000
+    socket-timeout-millis: 600000
+    #--Added
   prefix: /services
   semaphore:
     max-semaphores: 500
@@ -57,7 +65,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 600000
 
 management:
   endpoints:
@@ -104,7 +112,7 @@ management:
 
 spring:
   application:
-    name: gateway_kafka
+    name: Gateway_Kafka
   jmx:
     enabled: false
   data:
@@ -181,11 +189,11 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: gateway_kafka@localhost
+    from: Gateway_Kafka@localhost
   swagger:
     default-include-pattern: /api/.*
-    title: gateway_kafka API
-    description: gateway_kafka API documentation
+    title: Gateway_Kafka API
+    description: Gateway_Kafka API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

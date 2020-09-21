@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.azrul.ebanking.transaction.config;
+package com.azrul.ebanking.depositaccount.config;
 
-import com.azrul.ebanking.common.dto.TransactionDTO;
+import com.azrul.ebanking.common.dto.Transaction;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -33,8 +33,10 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
  *
  * @author azrul
  */
+
+//Added
 @Configuration
-class KafkaProducerConfig {
+class KafkaConfig {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -67,40 +69,41 @@ class KafkaProducerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, TransactionDTO> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(TransactionDTO.class));
+    public ConsumerFactory<String, Transaction> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(Transaction.class));
     }
 
     @Bean
-    public ProducerFactory<String, TransactionDTO> producerFactory() {
+    public ProducerFactory<String, Transaction> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public ReplyingKafkaTemplate<String, TransactionDTO, TransactionDTO> replyKafkaTemplate(ProducerFactory<String, TransactionDTO> pf, KafkaMessageListenerContainer<String, TransactionDTO> container) {
+    public ReplyingKafkaTemplate<String, Transaction, Transaction> replyKafkaTemplate(ProducerFactory<String, Transaction> pf, KafkaMessageListenerContainer<String, Transaction> container) {
         ReplyingKafkaTemplate replyTemplate = new ReplyingKafkaTemplate<>(pf, container);
         replyTemplate.setSharedReplyTopic(true);
         return replyTemplate;
     }
 
     @Bean
-    public KafkaMessageListenerContainer<String, TransactionDTO> replyContainer(ConsumerFactory<String, TransactionDTO> cf) {
+    public KafkaMessageListenerContainer<String, Transaction> replyContainer(ConsumerFactory<String, Transaction> cf) {
         ContainerProperties containerProperties = new ContainerProperties(depositDebitResponseTopic);
         containerProperties.setGroupId(groupId);
         return new KafkaMessageListenerContainer<>(cf, containerProperties);
     }
 
     @Bean
-    public KafkaTemplate<String, TransactionDTO> kafkaTemplate() {
+    public KafkaTemplate<String, Transaction> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, TransactionDTO>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TransactionDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Transaction>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Transaction> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setReplyTemplate(kafkaTemplate());
         return factory;
     }
 
 }
+

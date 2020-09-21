@@ -38,8 +38,6 @@ eureka:
       git-commit: ${git.commit.id.abbrev:}
       git-branch: ${git.branch:}
 ribbon:
-  ReadTimeout: 600000
-  ConnectionTimeout: 600000
   eureka:
     enabled: true
 feign:
@@ -107,8 +105,6 @@ management:
             enabled: true
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
   application:
     name: Transaction
   jmx:
@@ -199,6 +195,7 @@ jhipster:
     contact-email:
     license: unlicensed
     license-url:
+#Added
 kafka:
   bootstrap-servers: kafka.local:9092
   deposit-debit-request-topic: deposit-debit-request

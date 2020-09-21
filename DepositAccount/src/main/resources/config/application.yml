@@ -105,8 +105,6 @@ management:
             enabled: true
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
   application:
     name: DepositAccount
   jmx:
@@ -197,16 +195,19 @@ jhipster:
     contact-email:
     license: unlicensed
     license-url:
+#Added
 kafka:
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: kafka.local:9092
+  deposit-debit-request-topic: deposit-debit-request
+  deposit-debit-response-topic: deposit-debit-response
   consumer:
     key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    group.id: deposit-account
+    value.deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    group.id: transaction
     auto.offset.reset: earliest
   producer:
     key.serializer: org.apache.kafka.common.serialization.StringSerializer
-    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.JsonSerializer
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

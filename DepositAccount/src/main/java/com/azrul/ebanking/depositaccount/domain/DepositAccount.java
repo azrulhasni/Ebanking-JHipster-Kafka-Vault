@@ -36,9 +36,6 @@ public class DepositAccount implements Serializable {
     @Column(name = "balance", precision = 21, scale = 2)
     private BigDecimal balance;
 
-    @Column(name = "last_transaction_date")
-    private ZonedDateTime lastTransactionDate;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -112,19 +109,6 @@ public class DepositAccount implements Serializable {
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
-
-    public ZonedDateTime getLastTransactionDate() {
-        return lastTransactionDate;
-    }
-
-    public DepositAccount lastTransactionDate(ZonedDateTime lastTransactionDate) {
-        this.lastTransactionDate = lastTransactionDate;
-        return this;
-    }
-
-    public void setLastTransactionDate(ZonedDateTime lastTransactionDate) {
-        this.lastTransactionDate = lastTransactionDate;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -153,7 +137,6 @@ public class DepositAccount implements Serializable {
             ", openingDate='" + getOpeningDate() + "'" +
             ", status=" + getStatus() +
             ", balance=" + getBalance() +
-            ", lastTransactionDate='" + getLastTransactionDate() + "'" +
             "}";
     }
 }

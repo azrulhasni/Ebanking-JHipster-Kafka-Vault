@@ -1,7 +1,7 @@
 {
   "name": "gateway-kafka",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Description for gateway_kafka",
+  "description": "Description for Gateway_Kafka",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [

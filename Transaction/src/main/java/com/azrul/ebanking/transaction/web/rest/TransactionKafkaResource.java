@@ -1,7 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.azrul.ebanking.transaction.web.rest;
 
+
 //import com.azrul.ebanking.transaction.config.KafkaProperties;
-import com.azrul.ebanking.common.dto.TransactionDTO;
+import com.azrul.ebanking.common.dto.Transaction;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -28,7 +34,7 @@ public class TransactionKafkaResource {
     private String depositDebitResponseTopic;
     
     @Autowired
-    ReplyingKafkaTemplate<String, TransactionDTO, TransactionDTO> kafkaTemplate;
+    ReplyingKafkaTemplate<String, Transaction, Transaction> kafkaTemplate;
 
     private final Logger log = LoggerFactory.getLogger(TransactionKafkaResource.class);
 
@@ -36,17 +42,17 @@ public class TransactionKafkaResource {
     }
 
     @PostMapping("/transfer")
-    public TransactionDTO transfer(@RequestBody TransactionDTO transactionDTO) throws ExecutionException, InterruptedException {
-        log.debug("REST request to send to Kafka topic {} with key {} the message : {}", depositDebitRequestTopic, "AMMOUNT", transactionDTO);
+    public Transaction transfer(@RequestBody Transaction transaction) throws ExecutionException, InterruptedException {
+        log.debug("REST request to send to Kafka topic {} with key {} the message : {}", depositDebitRequestTopic, "AMOUNT", transaction);
 
-        ProducerRecord<String, TransactionDTO> record = new ProducerRecord<>(depositDebitRequestTopic,"AMMOUNT",transactionDTO);
+        ProducerRecord<String, Transaction> record = new ProducerRecord<>(depositDebitRequestTopic,"AMOUNT",transaction);
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, depositDebitResponseTopic.getBytes()));
         
         // post in kafka topic
-        RequestReplyFuture<String, TransactionDTO, TransactionDTO> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(10));
+        RequestReplyFuture<String, Transaction, Transaction> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(10));
 
         // get consumer record
-        ConsumerRecord<String, TransactionDTO> consumerRecord = sendAndReceive.get();
+        ConsumerRecord<String, Transaction> consumerRecord = sendAndReceive.get();
         // return consumer value
         return consumerRecord.value();
     }

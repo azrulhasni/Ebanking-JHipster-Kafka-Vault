@@ -1,7 +1,13 @@
+ 
+
+ 
+
+ 
+
 ? **Which \*type\* of application would you like to create?** Microservice
 application
 
-? **[Alpha] Do you want to make it reactive with Spring WebFlux?** No
+? **[Beta] Do you want to make it reactive with Spring WebFlux?** No
 
 ? **What is the base name of your application?** Transaction
 
@@ -29,10 +35,10 @@ reSQL, Oracle, MSSQL)
 
 ? **Which \*production\* database would you like to use?** PostgreSQL
 
-? **Which \*development\* database would you like to use?** H2 with in-memory
-persiste
+? **Which \*development\* database would you like to use?** H2 with disk-based
+persist
 
-nce
+ence
 
 ? **Do you want to use the Spring cache abstraction?** No - Warning, when using
 an S
@@ -41,49 +47,30 @@ QL database, this will disable the Hibernate 2nd level cache!
 
 ? **Would you like to use Maven or Gradle for building the backend?** Maven
 
-? **Which other technologies would you like to use?** Asynchronous messages
-using Ap
-
-ache Kafka
+? **Which other technologies would you like to use?** 
 
 ? **Would you like to enable internationalization support?** No
 
-? **Besides JUnit and Jest, which testing frameworks would you like to use?**
-(Press
-
- **\<space\>** to select, **\<a\>** to toggle all, **\<i\>** to invert
-selection)
+? **Besides JUnit and Jest, which testing frameworks would you like to use?** 
 
 ? **Would you like to install other generators from the JHipster Marketplace?**
 No
 
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
+\--------------
 
 ? **Which \*type\* of application would you like to create?** Microservice
 application
 
-? **[Alpha] Do you want to make it reactive with Spring WebFlux?** No
+? **[Beta] Do you want to make it reactive with Spring WebFlux?** No
 
-? **What is the base name of your application?** UnitTrust
+? **What is the base name of your application?** DepositAccount
 
 ? **As you are running in a microservice architecture, on which port would like
 yo**
 
 **ur server to run? It should be unique to avoid port conflicts.** 8082
 
-? **What is your default Java package name?** com.azrul.ebanking.unittrust
+? **What is your default Java package name?** com.azrul.ebanking.depositaccount
 
 ? **Which service discovery server do you want to use?** JHipster Registry (uses
 Eur
@@ -102,10 +89,10 @@ reSQL, Oracle, MSSQL)
 
 ? **Which \*production\* database would you like to use?** PostgreSQL
 
-? **Which \*development\* database would you like to use?** H2 with in-memory
-persiste
+? **Which \*development\* database would you like to use?** H2 with disk-based
+persist
 
-nce
+ence
 
 ? **Do you want to use the Spring cache abstraction?** No - Warning, when using
 an S
@@ -114,32 +101,27 @@ QL database, this will disable the Hibernate 2nd level cache!
 
 ? **Would you like to use Maven or Gradle for building the backend?** Maven
 
-? **Which other technologies would you like to use?** Asynchronous messages
-using Ap
-
-ache Kafka
+? **Which other technologies would you like to use?** 
 
 ? **Would you like to enable internationalization support?** No
 
-? **Besides JUnit and Jest, which testing frameworks would you like to use?**
-(Press
-
- **\<space\>** to select, **\<a\>** to toggle all, **\<i\>** to invert
-selection)
+? **Besides JUnit and Jest, which testing frameworks would you like to use?** 
 
 ? **Would you like to install other generators from the JHipster Marketplace?**
 (y/N
 
-) No
+) No
+
+\----------------
 
  
 
 ? **Which \*type\* of application would you like to create?** Microservice
 gateway
 
-? **[Alpha] Do you want to make it reactive with Spring WebFlux?** No
+? **[Beta] Do you want to make it reactive with Spring WebFlux?** No
 
-? **What is the base name of your application?** gateway_kafka
+? **What is the base name of your application?** Gateway_Kafka
 
 ? **As you are running in a microservice architecture, on which port would like
 yo**
@@ -165,10 +147,10 @@ reSQL, Oracle, MSSQL)
 
 ? **Which \*production\* database would you like to use?** PostgreSQL
 
-? **Which \*development\* database would you like to use?** H2 with in-memory
-persiste
+? **Which \*development\* database would you like to use?** H2 with disk-based
+persist
 
-nce
+ence
 
 ? **Do you want to use the Spring cache abstraction?** No - Warning, when using
 an S
@@ -179,10 +161,7 @@ QL database, this will disable the Hibernate 2nd level cache!
 
 ? **Would you like to use Maven or Gradle for building the backend?** Maven
 
-? **Which other technologies would you like to use?** (Press **\<space\>** to
-select, **\<a\>** 
-
-to toggle all, **\<i\>** to invert selection)
+? **Which other technologies would you like to use?** 
 
 ? **Which \*Framework\* would you like to use for the client?** Angular
 
@@ -193,14 +172,12 @@ ipster
 
 ? **Would you like to enable internationalization support?** No
 
-? **Besides JUnit and Jest, which testing frameworks would you like to use?**
-(Press
-
- **\<space\>** to select, **\<a\>** to toggle all, **\<i\>** to invert
-selection)
+? **Besides JUnit and Jest, which testing frameworks would you like to use?** 
 
 ? **Would you like to install other generators from the JHipster Marketplace?**
-No
+(y/N
+
+) No
 
  
 
