@@ -7,8 +7,8 @@ You will need to push your image to a registry. If you have not done so, use the
 ```
 $ docker image tag depositaccount azrulhasni/depositaccount
 $ docker push azrulhasni/depositaccount
-$ docker image tag gateway_kafka azrulhasni/gateway_kafka
-$ docker push azrulhasni/gateway_kafka
+$ docker image tag gatewaykafka azrulhasni/gatewaykafka
+$ docker push azrulhasni/gatewaykafka
 $ docker image tag transaction azrulhasni/transaction
 $ docker push azrulhasni/transaction
 ```
@@ -38,7 +38,7 @@ skaffold run [or] skaffold deploy
 Use these commands to find your application's IP addresses:
 
 ```
-$ kubectl get svc gateway_kafka
+$ kubectl get svc gatewaykafka
 ```
 
 ## Scaling your deployments

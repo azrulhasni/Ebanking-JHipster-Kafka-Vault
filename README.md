@@ -307,3 +307,17 @@ remote registry:
 You can deploy all your apps by running the following kubectl command:
 
   bash kubectl-apply.sh -f
+
+ 
+
+Test
+----
+
+ 
+
+### Authenticate
+
+curl -X POST "http://localhost:8080/api/authenticate" -H "accept: \*/\*" -H
+"Content-Type: application/json" -H "Authorization: Bearer " -d "{
+\\"password\\": \\"admin\\", \\"rememberMe\\": true, \\"username\\":
+\\"admin\\"}"

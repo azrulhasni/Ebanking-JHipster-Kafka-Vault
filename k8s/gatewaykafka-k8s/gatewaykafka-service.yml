@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway_kafka
+  name: gatewaykafka
   namespace: default
   labels:
-    app: gateway_kafka
+    app: gatewaykafka
 spec:
   selector:
-    app: gateway_kafka
-  type: NodePort
+    app: gatewaykafka
+  type: LoadBalancer
   ports:
     - name: http
       port: 8080

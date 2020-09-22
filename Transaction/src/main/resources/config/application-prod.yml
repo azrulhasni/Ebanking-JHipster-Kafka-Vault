@@ -33,6 +33,10 @@ management:
         enabled: false
 
 spring:
+  profiles:
+    active: prod
+    include:
+      - swagger 
   devtools:
     restart:
       enabled: false

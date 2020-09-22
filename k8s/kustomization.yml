@@ -6,9 +6,9 @@ resources:
   - depositaccount-k8s/depositaccount-deployment.yml
   - depositaccount-k8s/depositaccount-service.yml
   - depositaccount-k8s/depositaccount-postgresql.yml
-  - gateway_kafka-k8s/gateway_kafka-deployment.yml
-  - gateway_kafka-k8s/gateway_kafka-service.yml
-  - gateway_kafka-k8s/gateway_kafka-postgresql.yml
+  - gatewaykafka-k8s/gatewaykafka-deployment.yml
+  - gatewaykafka-k8s/gatewaykafka-service.yml
+  - gatewaykafka-k8s/gatewaykafka-postgresql.yml
   - transaction-k8s/transaction-deployment.yml
   - transaction-k8s/transaction-service.yml
   - transaction-k8s/transaction-postgresql.yml

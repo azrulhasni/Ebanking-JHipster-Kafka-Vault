@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway_kafka
+  name: gatewaykafka
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway_kafka
+      app: gatewaykafka
       version: 'v1'
   template:
     metadata:
       labels:
-        app: gateway_kafka
+        app: gatewaykafka
         version: 'v1'
     spec:
       affinity:
@@ -24,7 +24,7 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - gateway_kafka
+                        - gatewaykafka
                 topologyKey: kubernetes.io/hostname
               weight: 100
       initContainers:
@@ -36,7 +36,7 @@ spec:
             - |
               while true
               do
-                rt=$(nc -z -w 1 gateway_kafka-postgresql 5432)
+                rt=$(nc -z -w 1 gatewaykafka-postgresql 5432)
                 if [ $? -eq 0 ]; then
                   echo "DB is UP"
                   break
@@ -45,8 +45,8 @@ spec:
                 sleep 10
               done
       containers:
-        - name: gateway_kafka-app
-          image: azrulhasni/gateway_kafka
+        - name: gatewaykafka-app
+          image: azrulhasni/gatewaykafka
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
@@ -60,13 +60,13 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: http://admin:${jhipster.registry.password}@jhipster-registry.default.svc.cluster.local:8761/eureka/
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://gateway_kafka-postgresql.default.svc.cluster.local:5432/Gateway_Kafka
+              value: jdbc:postgresql://gatewaykafka-postgresql.default.svc.cluster.local:5432/GatewayKafka
             - name: SPRING_DATASOURCE_USERNAME
-              value: Gateway_Kafka
+              value: GatewayKafka
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: gateway_kafka-postgresql
+                  name: gatewaykafka-postgresql
                   key: postgresql-password
             - name: SPRING_SLEUTH_PROPAGATION_KEYS
               value: 'x-request-id,x-ot-span-context'

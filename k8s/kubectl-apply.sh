@@ -26,7 +26,7 @@ default() {
     suffix=k8s
     kubectl apply -f registry-${suffix}/
     kubectl apply -f depositaccount-${suffix}/
-    kubectl apply -f gateway_kafka-${suffix}/
+    kubectl apply -f gatewaykafka-${suffix}/
     kubectl apply -f transaction-${suffix}/
 
 }

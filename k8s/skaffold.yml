@@ -5,8 +5,8 @@ build:
     - image: azrulhasni/depositaccount
       context: ../DepositAccount
       jib: {}
-    - image: azrulhasni/gateway_kafka
-      context: ../Gateway-Kafka
+    - image: azrulhasni/gatewaykafka
+      context: ../GatewayKafka
       jib: {}
     - image: azrulhasni/transaction
       context: ../Transaction

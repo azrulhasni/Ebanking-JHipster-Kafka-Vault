@@ -19,7 +19,7 @@ metadata:
     app: depositaccount-postgresql
 type: Opaque
 data:
-  postgresql-password: ZmFmNzc3MzY2ZDhkNGQ2NTAyMjg3N2Q5NTRiMTA5NmIyZWQ5M2Q2OTllODRhNzM5NmM0YmVjNGQ2ODg0
+  postgresql-password: NWZkMDA2ZjIzNGIzNDNiOTNiOTYxZWIyMzA5YjIwZjRmNjczYmNiZGVhNWY5M2JkMDg1YzA3NmVjZWEx
 ---
 apiVersion: apps/v1
 kind: Deployment
