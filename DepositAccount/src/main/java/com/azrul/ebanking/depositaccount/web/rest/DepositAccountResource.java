@@ -16,6 +16,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.vault.core.VaultTemplate;
+import org.springframework.vault.core.VaultTransitOperations;
 
 /**
  * REST controller for managing {@link com.azrul.ebanking.depositaccount.domain.DepositAccount}.
@@ -30,11 +33,38 @@ public class DepositAccountResource {
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+    
+    @Autowired
+    VaultTemplate vaultTemplate;
 
     private final DepositAccountService depositAccountService;
 
     public DepositAccountResource(DepositAccountService depositAccountService) {
         this.depositAccountService = depositAccountService;
+    }
+    
+    @PostMapping("/encrypt")
+    public String encrypt(){
+//        URI baseUrl = URI.create("https://127.0.0.1:8200");
+//        VaultTemplate vaultTemplate = new VaultTemplate(VaultEndpoint.from(baseUrl), 
+//            new TokenAuthentication("s.6HAohs85JhXqRlA2aHqLZPpx"));
+        VaultTransitOperations transitOperations = vaultTemplate.opsForTransit();
+        String encrypted = transitOperations.encrypt("my-encryption-key", "Hello World");
+        String plain = transitOperations.decrypt("my-encryption-key", encrypted);
+        return plain;
+        /*VaultTransitPlain plain = new VaultTransitPlain();
+        plain.setPlaintext("Sm9uLFNub3csNDExMSAxMTExIDExMTEgMTExMSxyZXN0YXVyYW50LCwxODkyMDMwOTAzCg==");
+        
+        VaultTransitEncrypted encrypted = webClient.post()
+        .uri(baseUrl)
+        .header("X-Vault-Token","s.6HAohs85JhXqRlA2aHqLZPpx")
+        .body(BodyInserters.fromValue(plain))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()        
+        .bodyToMono(VaultTransitEncrypted.class).single().block();
+        
+        System.out.println(encrypted.getCiphertext());*/
+        
     }
 
     /**

@@ -24,3 +24,13 @@ spring:
       profile: dev # profile(s) of the property source
       label: master # toggle to switch to a different version of the configuration as stored in git
       # it can be set to any label, branch or commit of the configuration source Git repository
+    vault:
+      scheme: https
+      host: vault.default.svc
+      port: 8200
+      connection-timeout: 5000
+      read-timeout: 15000
+      authentication: TOKEN
+      token: s.WuTNTDpBqsspinc6dlDN0cbz
+      kv:
+        enabled=true:

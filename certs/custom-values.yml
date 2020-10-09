@@ -1,0 +1,27 @@
+global:
+  enabled: true
+  tlsDisable: false
+
+server:
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/userconfig/vault-server-tls/vault.ca    
+
+  extraVolumes:
+  - type: secret
+    name: vault-server-tls # Matches the ${SECRET_NAME} from above
+
+  standalone:
+    enabled: true
+    config: |
+      ui = true
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_cert_file = "/vault/userconfig/vault-server-tls/vault.crt"
+        tls_key_file  = "/vault/userconfig/vault-server-tls/vault.key"
+        tls_client_ca_file = "/vault/userconfig/vault-server-tls/vault.ca"
+      }
+
+      storage "file" {
+        path = "/vault/data"
+      }

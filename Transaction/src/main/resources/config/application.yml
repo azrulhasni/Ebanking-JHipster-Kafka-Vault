@@ -154,6 +154,8 @@ spring:
     ansi:
       console-available: true
 
+    
+
 server:
   servlet:
     session:
@@ -202,12 +204,14 @@ kafka:
   deposit-debit-response-topic: deposit-debit-response
   consumer:
     key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value.deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    #value.deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    value.deserializer: com.azrul.ebanking.common.EncryptedJsonDeserializer
     group.id: transaction
     auto.offset.reset: earliest
   producer:
     key.serializer: org.apache.kafka.common.serialization.StringSerializer
-    value.serializer: org.apache.kafka.common.serialization.JsonSerializer
+    #value.serializer: org.apache.kafka.common.serialization.JsonSerializer
+    value.serializer: com.azrul.ebanking.common.EncryptedJsonSerializer
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

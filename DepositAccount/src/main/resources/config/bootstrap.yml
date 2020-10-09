@@ -16,6 +16,16 @@ spring:
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     active: #spring.profiles.active#
   cloud:
+    vault:
+      scheme: https
+      host: vault.default.svc
+      port: 8200
+      connection-timeout: 5000
+      read-timeout: 15000
+      authentication: TOKEN
+      token: s.WuTNTDpBqsspinc6dlDN0cbz
+      kv:
+        enabled=true:
     config:
       fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
       uri: http://admin:${jhipster.registry.password}@localhost:8761/config
