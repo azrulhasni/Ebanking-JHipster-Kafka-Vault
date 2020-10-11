@@ -10,13 +10,62 @@
  */
 package com.azrul.ebanking.common.dto;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 /**
  *
  * @author azrul
  */
 
 //Added
-public class Transaction {
+public class Transaction implements Serializable{
+    
+    public Transaction(){}
+
+    @Override
+    public String toString() {
+        return "Transaction{" + "fromAccountNumber=" + fromAccountNumber + ", toAccountNumber=" + toAccountNumber + ", amount=" + amount + ", finalBalance=" + finalBalance + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + Objects.hashCode(this.fromAccountNumber);
+        hash = 37 * hash + Objects.hashCode(this.toAccountNumber);
+        hash = 37 * hash + Objects.hashCode(this.amount);
+        hash = 37 * hash + Objects.hashCode(this.finalBalance);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Transaction other = (Transaction) obj;
+        if (!Objects.equals(this.fromAccountNumber, other.fromAccountNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.toAccountNumber, other.toAccountNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.amount, other.amount)) {
+            return false;
+        }
+        if (!Objects.equals(this.finalBalance, other.finalBalance)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     private String fromAccountNumber;
     private String toAccountNumber;
     private String amount;

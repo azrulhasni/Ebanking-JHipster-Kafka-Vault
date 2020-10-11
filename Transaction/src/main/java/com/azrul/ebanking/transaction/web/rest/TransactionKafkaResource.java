@@ -8,6 +8,11 @@ package com.azrul.ebanking.transaction.web.rest;
 
 //import com.azrul.ebanking.transaction.config.KafkaProperties;
 import com.azrul.ebanking.common.dto.Transaction;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -16,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Base64;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +50,7 @@ public class TransactionKafkaResource {
     private String depositDebitResponseTopic;
     
     @Autowired
-    ReplyingKafkaTemplate<String, Transaction, Transaction> kafkaTemplate;
+    ReplyingKafkaTemplate<String, String, String> kafkaTemplate;
     
     @Autowired
     VaultTemplate vaultTemplate;
@@ -58,20 +65,22 @@ public class TransactionKafkaResource {
     public Transaction transfer(@RequestBody Transaction transaction) throws ExecutionException, InterruptedException {
         log.debug("REST request to send to Kafka topic {} with key {} the message : {}", depositDebitRequestTopic, "AMOUNT", transaction);
         //kafkaTemplate.setDefaultReplyTimeout(Duration.ofHours(1));
-        ProducerRecord<String, Transaction> record = new ProducerRecord<>(depositDebitRequestTopic,"AMOUNT",transaction);
+        String encryptedStr = encrypt(transaction);
+        ProducerRecord<String, String> record = new ProducerRecord<>(depositDebitRequestTopic,"AMOUNT",encryptedStr);
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, depositDebitResponseTopic.getBytes()));
         
         // post in kafka topic
-        RequestReplyFuture<String, Transaction, Transaction> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofHours(1));
+        RequestReplyFuture<String,String,String> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(30));
         
         // get consumer record
-        ConsumerRecord<String, Transaction> consumerRecord = sendAndReceive.get();
+        ConsumerRecord<String, String> consumerRecord = sendAndReceive.get();
         // return consumer value
-        return consumerRecord.value();
+        String encryptedReplyStr = consumerRecord.value();
+        return (Transaction) decrypt(encryptedReplyStr);
     }
     
     @PostMapping("/encrypt")
-    public String encrypt(){
+    public String encryptData(){
 //        URI baseUrl = URI.create("https://127.0.0.1:8200");
 //        VaultTemplate vaultTemplate = new VaultTemplate(VaultEndpoint.from(baseUrl), 
 //            new TokenAuthentication("s.6HAohs85JhXqRlA2aHqLZPpx"));
@@ -92,6 +101,51 @@ public class TransactionKafkaResource {
         
         System.out.println(encrypted.getCiphertext());*/
         
+    }
+    
+    public String encrypt(Object obj){
+        ObjectOutputStream os = null;
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            os = new ObjectOutputStream(out);
+            os.writeObject(obj);
+            byte[] dataBytes =  out.toByteArray();
+            String dataStr = Base64.getEncoder().encodeToString(dataBytes);
+            VaultTransitOperations transitOperations = vaultTemplate.opsForTransit();
+            String encryptedDataStr = transitOperations.encrypt("my-encryption-key", dataStr);
+            return encryptedDataStr;
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                os.close();
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
+    public Object decrypt(String encryptedDataStr)  {
+        ObjectInputStream is = null;
+        try {
+            VaultTransitOperations transitOperations = vaultTemplate.opsForTransit();
+            String decryptedDataStr = transitOperations.decrypt("my-encryption-key", encryptedDataStr);
+            byte[] data = Base64.getDecoder().decode(decryptedDataStr);
+            ByteArrayInputStream in = new ByteArrayInputStream(data);
+            is = new ObjectInputStream(in);
+            return is.readObject();
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
     }
 
     
