@@ -5,6 +5,8 @@
  */
 package com.azrul.ebanking.transaction.config;
 
+import com.azrul.ebanking.common.EncryptedJsonDeserializer;
+import com.azrul.ebanking.common.EncryptedJsonSerializer;
 import com.azrul.ebanking.common.dto.Transaction;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +31,7 @@ import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.vault.core.VaultTemplate;
 
 /**
  *
@@ -46,16 +50,19 @@ class KafkaConfig {
 
     @Value("${kafka.consumer.group.id:transaction}")
     private String groupId;
+    
+    @Autowired
+    VaultTemplate vaultTemplate;
 
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapServers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JsonSerializer.class);
+        //props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+        //        StringSerializer.class);
+        //props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+        //        EncryptedJsonSerializer.class);
         return props;
     }
 
@@ -63,19 +70,19 @@ class KafkaConfig {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        //props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EncryptedJsonDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         return props;
     }
 
     @Bean
     public ConsumerFactory<String, Transaction> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new JsonDeserializer<>(Transaction.class));
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new EncryptedJsonDeserializer(vaultTemplate, Transaction.class));
     }
 
     @Bean
     public ProducerFactory<String, Transaction> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
+        return new DefaultKafkaProducerFactory<>(producerConfigs(), new StringSerializer(), new EncryptedJsonSerializer(vaultTemplate));
     }
 
     @Bean

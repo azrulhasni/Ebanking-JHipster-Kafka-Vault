@@ -13,20 +13,32 @@ import java.util.Base64;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.stereotype.Component;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.core.VaultTransitOperations;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  *
  * @author azrul
  */
+//@Component
 public class EncryptedJsonDeserializer extends JsonDeserializer{
-    @Autowired
+    //@Autowired
     VaultTemplate vaultTemplate;
     
     public EncryptedJsonDeserializer() {
         super();
+        //SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
+    
+    public EncryptedJsonDeserializer(VaultTemplate vaultTemplate, Class targetType) {
+        super(targetType);
+        this.vaultTemplate=vaultTemplate;
+        //SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    }
+    
+    
 
     /**
      * A constructor that additionally specifies some {@link DeserializationFeature}

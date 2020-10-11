@@ -58,6 +58,8 @@ public class TransactionApp {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
+        System.setProperty("javax.net.ssl.trustStore","/truststore/cacerts");
+        System.setProperty("javax.net.ssl.trustStorePassword","changeit");
         SpringApplication app = new SpringApplication(TransactionApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();

@@ -13,16 +13,28 @@ import javax.annotation.Nullable;
 import org.apache.kafka.common.header.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.stereotype.Component;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.core.VaultTransitOperations;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  *
  * @author azrul
  */
+//@Component
 public class EncryptedJsonSerializer<T> extends JsonSerializer<T> {
-	@Autowired
+	//@Autowired
         VaultTemplate vaultTemplate;
+        
+        public EncryptedJsonSerializer(){
+            //SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this); 
+        }
+        
+        
+        public EncryptedJsonSerializer(VaultTemplate vaultTemplate) {
+            this.vaultTemplate=vaultTemplate;
+        }
    	
 	@Override
 	@Nullable

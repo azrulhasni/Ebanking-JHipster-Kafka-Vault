@@ -57,13 +57,13 @@ public class TransactionKafkaResource {
     @PostMapping("/transfer")
     public Transaction transfer(@RequestBody Transaction transaction) throws ExecutionException, InterruptedException {
         log.debug("REST request to send to Kafka topic {} with key {} the message : {}", depositDebitRequestTopic, "AMOUNT", transaction);
-
+        //kafkaTemplate.setDefaultReplyTimeout(Duration.ofHours(1));
         ProducerRecord<String, Transaction> record = new ProducerRecord<>(depositDebitRequestTopic,"AMOUNT",transaction);
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, depositDebitResponseTopic.getBytes()));
         
         // post in kafka topic
-        RequestReplyFuture<String, Transaction, Transaction> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(10));
-
+        RequestReplyFuture<String, Transaction, Transaction> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofHours(1));
+        
         // get consumer record
         ConsumerRecord<String, Transaction> consumerRecord = sendAndReceive.get();
         // return consumer value

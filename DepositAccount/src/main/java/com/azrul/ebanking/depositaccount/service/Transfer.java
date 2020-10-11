@@ -46,7 +46,10 @@ public class Transfer {
             trx.setFinalBalance(from.getBalance().toPlainString());
         }
         depositAccountService.save(to,from);
-        
+        System.out.println("TRX.finalBalance:"+trx.getFinalBalance());
+        System.out.println("TRX.from:"+trx.getFromAccountNumber());
+        System.out.println("TRX.to:"+trx.getToAccountNumber());
+        System.out.println("TRX.ammount:"+trx.getAmount());
         return trx;
     }
 

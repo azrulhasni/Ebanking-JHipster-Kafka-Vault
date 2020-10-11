@@ -28,8 +28,8 @@ spring:
       scheme: https
       host: vault.default.svc
       port: 8200
-      connection-timeout: 5000
-      read-timeout: 15000
+      connection-timeout: 3600000
+      read-timeout: 3600000
       authentication: TOKEN
       token: s.WuTNTDpBqsspinc6dlDN0cbz
       kv:

@@ -43,11 +43,11 @@ ribbon:
 feign:
   hystrix:
     enabled: true
-  # client:
-  #     config:
-  #         default:
-  #             connectTimeout: 5000
-  #             readTimeout: 5000
+  client:
+    config:
+      default:
+        connectTimeout: 3600000
+        readTimeout: 3600000
 
 # See https://github.com/Netflix/Hystrix/wiki/Configuration
 hystrix:
@@ -57,8 +57,8 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           # See https://github.com/spring-cloud/spring-cloud-netflix/issues/1330
-          # thread:
-          #     timeoutInMilliseconds: 10000
+          thread:
+            timeoutInMilliseconds: 3600000
   shareSecurityContext: true
 
 management:
@@ -203,9 +203,9 @@ kafka:
   deposit-debit-request-topic: deposit-debit-request
   deposit-debit-response-topic: deposit-debit-response
   consumer:
-    key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    #key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
     #value.deserializer: org.apache.kafka.common.serialization.JsonDeserializer
-    value.deserializer: com.azrul.ebanking.common.EncryptedJsonDeserializer
+    #value.deserializer: com.azrul.ebanking.common.EncryptedJsonDeserializer
     group.id: transaction
     auto.offset.reset: earliest
   producer:
