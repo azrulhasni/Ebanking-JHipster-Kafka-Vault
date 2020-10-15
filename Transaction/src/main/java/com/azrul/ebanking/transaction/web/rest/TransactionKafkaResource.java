@@ -70,7 +70,7 @@ public class TransactionKafkaResource {
         record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, depositDebitResponseTopic.getBytes()));
         
         // post in kafka topic
-        RequestReplyFuture<String,String,String> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(30));
+        RequestReplyFuture<String,String,String> sendAndReceive = kafkaTemplate.sendAndReceive(record,Duration.ofSeconds(3600));
         
         // get consumer record
         ConsumerRecord<String, String> consumerRecord = sendAndReceive.get();

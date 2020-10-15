@@ -197,7 +197,7 @@ jhipster:
     license-url:
 #Added
 kafka:
-  bootstrap-servers: kafka.local:9092
+  bootstrap-servers: kafka-headless.default.svc.cluster.local:9092
   deposit-debit-request-topic: deposit-debit-request
   deposit-debit-response-topic: deposit-debit-response
   consumer:

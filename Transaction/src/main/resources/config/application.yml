@@ -199,7 +199,7 @@ jhipster:
     license-url:
 #Added
 kafka:
-  bootstrap-servers: kafka.local:9092
+  bootstrap-servers: kafka-headless.default.svc.cluster.local:9092
   deposit-debit-request-topic: deposit-debit-request
   deposit-debit-response-topic: deposit-debit-response
   consumer:
@@ -209,9 +209,9 @@ kafka:
     group.id: transaction
     auto.offset.reset: earliest
   producer:
-    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    #key.serializer: org.apache.kafka.common.serialization.StringSerializer
     #value.serializer: org.apache.kafka.common.serialization.JsonSerializer
-    value.serializer: com.azrul.ebanking.common.EncryptedJsonSerializer
+    #value.serializer: org.apache.kafka.common.serialization.StringSerializer
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
