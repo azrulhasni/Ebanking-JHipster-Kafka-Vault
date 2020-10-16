@@ -1147,12 +1147,18 @@ QL database, this will disable the Hibernate 2nd level cache!
 
     ![](README.images/GsJERJ.jpg)
 
-    [
+    [Full source:
+    <https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/common/dto/Transaction.java>]
+
+     
 
 -   Under the package com.azrul.ebanking.transaction.config create a
     configuration class called KafkaConfig
 
 ![](README.images/ZFJ1QF.jpg)
+
+[Full source:
+<https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/transaction/config/KafkaConfig.java>]
 
 1.  Kafka configuration
 
@@ -1223,6 +1229,11 @@ kafka:
 
 ![](README.images/4iNxtE.jpg)
 
+[Full source:
+<https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/transaction/web/rest/TransactionKafkaResource.java>]
+
+ 
+
 -   Let us break down this code:
 
     1.  First, we need to get the request and response topic. Recall our
@@ -1273,7 +1284,7 @@ kafka:
 ![](README.images/Iu0ZTX.jpg)
 
 -   Next, we need to tell Java to use the cacerts in the /truststore/cacerts. In
-    our Transaction.java file, in the main method, add the lines below. Make
+    our TransactionApp.java file, in the main method, add the lines below. Make
     sure we use the right password for cacerts (default is changeit):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1283,7 +1294,8 @@ kafka:
 
 ![](README.images/UZkvdb.jpg)
 
- 
+[Full source:
+<https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/transaction/TransactionApp.java>]
 
 ###  
 
