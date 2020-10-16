@@ -1,13 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.azrul.ebanking.common.dto;
 
 import java.io.Serializable;
@@ -18,10 +9,14 @@ import java.util.Objects;
  * @author azrul
  */
 
-//Added
 public class Transaction implements Serializable{
     
     public Transaction(){}
+    
+       private String fromAccountNumber;
+    private String toAccountNumber;
+    private String amount;
+    private String finalBalance;
 
     @Override
     public String toString() {
@@ -66,10 +61,7 @@ public class Transaction implements Serializable{
     }
     
     
-    private String fromAccountNumber;
-    private String toAccountNumber;
-    private String amount;
-    private String finalBalance;
+ 
 
     /**
      * @return the fromAccountNumber

@@ -5,16 +5,12 @@
  */
 package com.azrul.ebanking.transaction.config;
 
-//import com.azrul.ebanking.common.EncryptedJsonDeserializer;
-//import com.azrul.ebanking.common.EncryptedJsonSerializer;
-//import com.azrul.ebanking.common.dto.Transaction;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,16 +25,11 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
-//import org.springframework.kafka.support.serializer.JsonDeserializer;
-//import org.springframework.kafka.support.serializer.JsonSerializer;
-import org.springframework.vault.core.VaultTemplate;
 
 /**
  *
  * @author azrul
  */
-
-//Added
 @Configuration
 class KafkaConfig {
 
@@ -50,9 +41,6 @@ class KafkaConfig {
 
     @Value("${kafka.consumer.group.id:transaction}")
     private String groupId;
-    
-    @Autowired
-    VaultTemplate vaultTemplate;
 
     @Bean
     public Map<String, Object> producerConfigs() {

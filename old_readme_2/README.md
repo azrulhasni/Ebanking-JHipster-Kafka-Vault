@@ -490,20 +490,6 @@ You should see vault in the list of pods
 
  
 
-### Vault Kubernetes Service
-
--   Run the command below to get the list of services
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kubectl get svc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--   You should see the list below. The name of Vault service is “vault”. Since
-    Vault is running in the default cluster, the fully qualified domain name for
-    the vault service (within Kubernetes) should be **vault.default.svc**.
-
-![](README.images/UXPudN.jpg)
-
 ### Initialize Vault
 
 -   To initialize vault, we need to run the command below:
@@ -673,7 +659,7 @@ path "transit/encrypt/my-encryption-key" {
 ![](README.images/so8WNv.jpg)
 
 -   Then fire up your command line console and run the curl command below. Note
-    that the value `s.Tyu…d`below is the value of the root token obtained from
+    that the value `s.Tyu…d `below is the value of the root token obtained from
     the file cluster-keys.json above. The value of the policy we created,
     my-encrypt-policy, is also specified below. (We use the option -k on our
     curl command because the certificate we use is self-signed. Without -k, the
@@ -683,8 +669,8 @@ path "transit/encrypt/my-encryption-key" {
 > curl --header "X-Vault-Token: s.Tyu...d" --request POST --data '{"policies": ["my-encrypt-policy"]}' -k https://localhost:8200/v1/auth/token/create
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You should get the response below. Note the value`s.O1...k` of the client token.
-Let us call this the **encryptor-token**
+You should get the response below. Note the value` s.O1...k` of the client
+token. Let us call this the **encryptor-token**
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 {
@@ -851,54 +837,6 @@ curl --header "X-Vault-Token: s.7xdIhRPcJXFw2B1s6fKasHXv" --request POST --data 
 
  
 
-### Creating token for both encrypt and decrypt
-
--   Recall our architecture where both Transaction Services and DepositAccount
-    Service would need to consume and send messages. This would mean they need
-    both encrypt and decrypt function. To create a token with both functions,
-    just specify both policies:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-curl --header "X-Vault-Token: s.WuTNTDpBqsspinc6dlDN0cbz" --request POST --data '{"policies": ["my-decrypt-policy", "my-encrypt-policy"]}' -k https://localhost:8200/v1/auth/token/create
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--   You will get the response below. You can use the ‘client_token’ to securely
-    login to Vault to obtain both encrypt and decrypt functionality:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{
-  "request_id": "a1f0fc87-5c27-94e3-b043-29adc5c87557",
-  "lease_id": "",
-  "renewable": false,
-  "lease_duration": 0,
-  "data": null,
-  "wrap_info": null,
-  "warnings": null,
-  "auth": {
-    "client_token": "s.WuTNTDpBqsspinc6dlDN0cbz",
-    "accessor": "Qc...dU",
-    "policies": [
-      "default",
-      "my-decrypt-policy",
-      "my-encrypt-policy"
-    ],
-    "token_policies": [
-      "default",
-      "my-decrypt-policy",
-      "my-encrypt-policy"
-    ],
-    "metadata": null,
-    "lease_duration": 2764800,
-    "renewable": true,
-    "entity_id": "",
-    "token_type": "service",
-    "orphan": false
-  }
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
-
 ### Conclusion for Vault
 
 We have finally install and setup Vault in our Kubernetes cluster (Standalone
@@ -906,8 +844,11 @@ setup). We have activated the encryption-as-a-service engine and created two
 different tokens with two different capabilities. The encryptor-token to encrypt
 data and the decryptor-token to decrypt data. We have also tested the engine’s
 API with both token and we see that both positive and negative test cases pass.
-In the end, we created a single token to be used for both encrypt and decrypt
-functionality.
+
+This fulfils our requirements stated earlier in this article where a service
+would only have access to what it needs to execute its function. We can now
+embed the encryptor-token into our Transaction Service and the decryptor-token
+into our DepositAccount Service.
 
  
 
@@ -1013,7 +954,7 @@ folder. Run:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A set of questions will be asked. Answer them as follows. Please note that when
-asked `Which other technologies would you like to use?`DO NOT choose Kafka. We
+asked `Which other technologies would you like to use? `DO NOT choose Kafka. We
 will deal with Kafka separately and not through JHipster :
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1046,7 +987,8 @@ ipster
 ) No
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--   You have now successfully setup the API gateway
+-   You have now successfully setup the API gateway  
+    
 
 ### Setup Transaction micro-service
 
@@ -1135,20 +1077,6 @@ QL database, this will disable the Hibernate 2nd level cache!
 
  
 
-### Coding the Transaction micro-service
-
--   Let us create a way to transport our data from publisher to consumer and
-    back again. For this we create a package called
-    com.azrul.ebanking.common.dto. This will be a common package for both
-    producer and consumer. In there lets us create a Transaction class as per
-    below. Please note that in order for us to make the Transaction class
-    serialisable, it must implements the Serializable interface, must have a
-    default constructor, toString and equals method :
-
-    ![](README.images/GsJERJ.jpg)
-
-    [
-
 -   Under the package com.azrul.ebanking.transaction.config create a
     configuration class called KafkaConfig
 
@@ -1186,24 +1114,10 @@ kafka:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -   Under the folder \$PROJECTS/Transaction/src/main/resources/config, in the
-    file bootstrap.yml add the properties below under spring.cloud.
-
--   In scheme, make sure we put http**s**
-
--   In host, make sure we put the fully-qualified domain name of ourselves Vault
-    Kubernetes service. Recall the Vault Kubernetes Service paragraph above
-
--   In both connection-timeout and read-timeout, put a reasonable timeout. We
-    put a big one for testing. Put a small one (say a few seconds) for
-    production
-
--   In authentication, put TOKEN, to indicate that we will log in via secure
-    token
-
--   In token, make sure you enter the client_token value from the 'Creating
-    token for both encrypt and decrypt’ paragraph before.
+    file bootstrap.yml add the properties below under spring.cloud
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     vault:
       scheme: https
       host: vault.default.svc
@@ -1216,7 +1130,7 @@ kafka:
         enabled=true:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 
+-   Note:
 
 -   Next, in the package com.azrul.ebanking.transaction.web.rest, create a
     controller called TransactionKafkaResource
@@ -1225,67 +1139,33 @@ kafka:
 
 -   Let us break down this code:
 
-    1.  First, we need to get the request and response topic. Recall our
-        architecture. In addition, we also wire in our KafkaTemplate to
-        facilitate us calling Kafka
+-    
 
-    2.  We also wire in VaultTemplate to facilitate us calling Vault
-
-    3.  This is where we will receive a restful call. We will encrypt the data
-        in that call, create a ProducerRecord and send the message to the
-        deposit-debit-request topic. We will then wait for a reply from the
-        deposit-debit-response topic. The reply would contain our resulting
-        balance. Once we have that data, we will decrypt it and return to the
-        caller.
-
-    4.  This is where we would encrypt our data. Originally, our data is in the
-        form of an object (of type Transaction). We then transform this into a
-        series of bytes. The series of bytes are then translated to a Base64
-        string. Next, we encrypt the Base64 string using Vault Transit engine.
-
-    5.  This is where we decrypt our data. Originally, we will get an encrypted
-        Base64 string. We need to decrypt this string using Vault Transit
-        engine. This will result in a decrypted Base64 string. Next, we decode
-        the Base64 decrypted string into a series of bytes. And lastly, we
-        convert the series of bytes back into an object.
-
-     
-
-### Dealing with SSL with self-signed certificate for Transaction micro-service
-
--   Do recall our discussion (paragraph Prepairing truststore) on the difficulty
-    of calling self signed protected end point from a micro-service. We will
-    leverage Jib to help us to solve this problem and also to deploy to
-    Kubernetes.
-
--   If you notice, one of the folder created by JHipster is called Jib
-    (\$PROJECTS/Transaction/src/main/jib). Anything in this folder will be
-    copied to the Docker image at the root level.
-
--   E.g. if we have \$PROJECTS/Transaction/src/main/jib/myfolder/myfile.txt,
-    when we create  a Docker image, Jib will copy myfolder and myfile.txt to the
-    Docker image. This create  /myfolder/myfile.txt in the image
-
--   We will create folder called truststore and copy our host / local truststore
-    (cacerts) in there. This will copy cacerts into the image at
-    /truststore/cacerts
-
-![](README.images/Iu0ZTX.jpg)
-
--   Next, we need to tell Java to use the cacerts in the /truststore/cacerts. In
-    our Transaction.java file, in the main method, add the lines below. Make
-    sure we use the right password for cacerts (default is changeit):
+-   First, we need to get the request and response topic. Recall our
+    architecture. In addition, we also wire in our KafkaTemplate to facilitate
+    us calling Kafka
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- System.setProperty("javax.net.ssl.trustStore","/truststore/cacerts");
- System.setProperty("javax.net.ssl.trustStorePassword","changeit");
+@Value("${kafka.deposit-debit-request-topic:deposit-debit-request}")
+private String depositDebitRequestTopic;
+
+@Value("${kafka.deposit-debit-response-topic:deposit-debit-response}")
+private String depositDebitResponseTopic;
+    
+@Autowired
+ReplyingKafkaTemplate<String, String, String> kafkaTemplate;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-![](README.images/UZkvdb.jpg)
+-   We also wire in VaultTemplate to facilitate us calling Vault
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ @Autowired
+    VaultTemplate vaultTemplate;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  
 
-###  
+ 
 
  
 
