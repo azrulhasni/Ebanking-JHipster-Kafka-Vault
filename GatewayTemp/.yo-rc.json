@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.azrul.ebanking.gatewaykafka"
+    },
+    "jhipsterVersion": "6.10.3",
+    "applicationType": "gateway",
+    "baseName": "GatewayTemp",
+    "packageName": "com.azrul.ebanking.gatewaykafka",
+    "packageFolder": "com/azrul/ebanking/gatewaykafka",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MzdiOGMyZTgwYTM2NjIwZDNhODBhY2MyZGE4MDVmYWI5YzNhOTEwZGQ1MzQwMzE3MWQ5MGEwMTFjM2I0OWQzMzkwMjJlYWI3ODhkMjk1YjFlM2I1ZTg3ZGMxMjIxNWI3NDc1OTMyMjU2MWRkMzk4MzUyMzMwZmY4MDlkODQyYjU=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1602818865055,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
