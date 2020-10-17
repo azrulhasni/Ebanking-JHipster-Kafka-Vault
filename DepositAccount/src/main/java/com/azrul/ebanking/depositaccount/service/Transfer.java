@@ -12,11 +12,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import static java.lang.System.out;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -28,45 +28,45 @@ import org.springframework.vault.core.VaultTransitOperations;
  *
  * @author azrul
  */
-
-//Added
 @Component
 public class Transfer {
-
-    private final DepositAccountService depositAccountService;
-
+   
     @Autowired
     VaultTemplate vaultTemplate;
+    
+    @Autowired
+    DepositAccountService depositAccountService;
 
-    public Transfer(DepositAccountService depositAccountService) {
-        this.depositAccountService = depositAccountService;
+    public Transfer() {
     }
+    
+    private final org.slf4j.Logger log = LoggerFactory.getLogger(Transfer.class);
+
 
     @KafkaListener(topics = "${kafka.deposit-debit-request-topic:deposit-debit-request}")
     @SendTo
     public String transact(final String data) throws InterruptedException {
-      
-            Transaction trx = (Transaction)decrypt(data);
-            System.out.println("Ammount:" + trx.getAmount());
-            
-            BigDecimal ammount = new BigDecimal(trx.getAmount());
-            DepositAccount from = depositAccountService
-                    .findByAccountNumber(trx.getFromAccountNumber()).orElseThrow();
-            
-            DepositAccount to = depositAccountService
-                    .findByAccountNumber(trx.getToAccountNumber()).orElseThrow();
-            
-            if (from.getBalance().compareTo(ammount)>0 && from.getBalance().compareTo(BigDecimal.ZERO)>0){
-                from.setBalance(from.getBalance().subtract(ammount));
-                to.setBalance(to.getBalance().add(ammount));
-                trx.setFinalBalance(from.getBalance().toPlainString());
-            }
-            depositAccountService.save(to,from);
-            System.out.println("TRX.finalBalance:"+trx.getFinalBalance());
-            System.out.println("TRX.from:"+trx.getFromAccountNumber());
-            System.out.println("TRX.to:"+trx.getToAccountNumber());
-            System.out.println("TRX.ammount:"+trx.getAmount());
-            return encrypt(trx);
+        Transaction trx = (Transaction)decrypt(data);
+        Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, "Ammount:" + trx.getAmount());
+
+        BigDecimal ammount = new BigDecimal(trx.getAmount());
+        DepositAccount from = depositAccountService
+                .findByAccountNumber(trx.getFromAccountNumber()).orElseThrow();
+
+        DepositAccount to = depositAccountService
+                .findByAccountNumber(trx.getToAccountNumber()).orElseThrow();
+
+        if (from.getBalance().compareTo(ammount)>0 && from.getBalance().compareTo(BigDecimal.ZERO)>0){
+            from.setBalance(from.getBalance().subtract(ammount));
+            to.setBalance(to.getBalance().add(ammount));
+            trx.setFinalBalance(from.getBalance().toPlainString());
+        }
+        depositAccountService.save(to,from);
+        log.info("TRX.finalBalance:"+trx.getFinalBalance());
+        log.info("TRX.from:"+trx.getFromAccountNumber());
+        log.info("TRX.to:"+trx.getToAccountNumber());
+        log.info("TRX.ammount:"+trx.getAmount());
+        return encrypt(trx);
     }
     
     public String encrypt(Object obj){
@@ -81,12 +81,12 @@ public class Transfer {
             String encryptedDataStr = transitOperations.encrypt("my-encryption-key", dataStr);
             return encryptedDataStr;
         } catch (IOException ex) {
-            Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, ex);
+            log.info(null, ex);
         } finally {
             try {
                 os.close();
             } catch (IOException ex) {
-                Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, ex);
+                log.info(null, ex);
             }
         }
         return null;
@@ -101,17 +101,16 @@ public class Transfer {
             is = new ObjectInputStream(in);
             return is.readObject();
         } catch (IOException ex) {
-            Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, ex);
+            log.info(null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, ex);
+            log.info(null, ex);
         } finally {
             try {
                 is.close();
             } catch (IOException ex) {
-                Logger.getLogger(Transfer.class.getName()).log(Level.SEVERE, null, ex);
+                log.info(null, ex);
             }
         }
         return null;
     }
-
 }

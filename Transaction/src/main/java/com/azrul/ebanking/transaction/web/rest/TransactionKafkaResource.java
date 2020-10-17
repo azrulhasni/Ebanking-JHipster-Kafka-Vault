@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,12 +79,12 @@ public class TransactionKafkaResource {
             String encryptedDataStr = transitOperations.encrypt("my-encryption-key", dataStr);
             return encryptedDataStr;
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+            log.error(null, ex);
         } finally {
             try {
                 os.close();
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(null, ex);
             }
         }
         return null;
@@ -100,14 +99,14 @@ public class TransactionKafkaResource {
             is = new ObjectInputStream(in);
             return is.readObject();
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+            log.error(null, ex);
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+            log.error(null, ex);
         } finally {
             try {
                 is.close();
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(TransactionKafkaResource.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(null, ex);
             }
         }
         return null;

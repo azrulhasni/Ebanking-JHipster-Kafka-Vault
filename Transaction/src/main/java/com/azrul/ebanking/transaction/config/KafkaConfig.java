@@ -100,6 +100,5 @@ class KafkaConfig {
         factory.setReplyTemplate(kafkaTemplate());
         return factory;
     }
-
 }
 

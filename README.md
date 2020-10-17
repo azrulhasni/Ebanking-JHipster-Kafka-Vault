@@ -34,11 +34,11 @@ services, RPC, messaging, etc. One popular implementation of messaging (publish
 ### Publish subscribe
 
 Kafka follows the publish subscribe pattern. This pattern works like a bulletin
-board. If Alice put up an announcement on a bulletin board. Bob and Charles
-could both read them. They could read them at the same time, or one after the
-other. Bob could read the board today and Charles could read it tomorrow. The
-announcement by Alice would remain on the bulletin board until the expiration
-date for it elapsed.
+board. For example, if Alice put up an announcement on a bulletin board. Bob and
+Charles could both read them. They could read them at the same time, or one
+after the other. Bob could read the board today and Charles could read it
+tomorrow. The announcement by Alice would remain on the bulletin board until the
+expiration date for it elapsed.
 
  
 
@@ -49,24 +49,30 @@ Event or a Message.
 ![](README.images/5It3ko.jpg)
 
 As you can see, a Topic would need to retain data for a prescribed time period.
-Because of this, there is a need for the data in Topic to be secured.
-Unfortunately Kafka does not handle encryption data at rest. This is where Vault
-comes in.
+Because of this, there is a need for the data in the Topic to be secured.
+Unfortunately Kafka (at the time of this writing) does not handle encryption of
+data end-to-end.
+
+![](README.images/T3cnlK.jpg)
+
+This is where Vault comes in.
 
  
 
 ### Vault
 
 Vault provides encryption as a service for us. This allows us to have and end to
-end encryption scheme for our messages. Now, of course, all we need to encrypt a
-message coming from a client to a server is a private key/public key
-infra-structure. It is quite easy to just create these keys and embed them into
-the Publisher and Subscriber services as per below:
+end encryption scheme for our messages.
+
+But why Vault? Now, of course, all we need to encrypt a message coming from a
+publisher to a subscriber is a private key/public key infrastructure. It is
+quite easy to just create these keys and embed them into the Publisher and
+Subscriber services as per below:
 
 ![](README.images/RGQXYx.jpg)
 
 The problem is when we have multiple subscribers, each one with its own set of
-private / public key. The problem would come when we need to manage the
+private / public keys. The problem would come when we need to manage the
 lifecycle of the keys. When it comes to expiry for example, both keys need to be
 replaced. If the keys are embedded, then redeployment may be needed.
 
@@ -90,18 +96,22 @@ Vault allow us to centrally manage all these keys:
 
 ![](README.images/rib2S6.jpg)
 
-In addition, Vault allows to dynamically assign which service has access to
+In addition, Vault allows us to dynamically assign which service has access to
 which key. If ever, a particular service is compromised, keys could easily be
-revoked and restored if needed.
+revoked and restored if once the system is secured again.
 
  
 
 ### Architecture
 
-The architecture supporting secure end to end communication using Kafka is
-presented below:
+The architecture of our application is presented below. It supports secure end
+to end communication (messaging) using Vault and Kafka :
 
-![](README.images/m38s2v.jpg)
+ 
+
+![](README.images/Ld6IYu.jpg)
+
+ 
 
 Application flow:
 
@@ -296,7 +306,7 @@ Setting up Vault
     For that we will use a classic TLS connectivity (HTTPS) to secure our
     communication with Vault. We will create a self-signed certificate for this.
 
--    
+ 
 
 ### Install with TLS
 
@@ -1088,10 +1098,10 @@ QL database, this will disable the Hibernate 2nd level cache!
 
  
 
-### Integrating Transaction to Kafka and Vault
+### Specify dependency to Kafka and Vault
 
 -   Firstly, let us deal with dependencies. In the file
-    \$PROJECTS/Transaction.pom.xml, add the dependencies below in the
+    \$PROJECTS/Transaction/pom.xml, add the dependencies below in the
     \<dependencies\> \</dependencies\> tag.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1138,8 +1148,8 @@ QL database, this will disable the Hibernate 2nd level cache!
 ### Coding the Transaction micro-service
 
 -   Let us create a way to transport our data from publisher to consumer and
-    back again. For this we create a package called
-    com.azrul.ebanking.common.dto. This will be a common package for both
+    back again. For this we create a ‘data transfer object’ (DTO) in a package
+    called com.azrul.ebanking.common.dto. This will be a common package for both
     producer and consumer. In there lets us create a Transaction class as per
     below. Please note that in order for us to make the Transaction class
     serialisable, it must implements the Serializable interface, must have a
@@ -1155,7 +1165,7 @@ QL database, this will disable the Hibernate 2nd level cache!
 -   Under the package com.azrul.ebanking.transaction.config create a
     configuration class called KafkaConfig
 
-![](README.images/ZFJ1QF.jpg)
+![](README.images/0ZK6o7.jpg)
 
 [Full source:
 <https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/transaction/config/KafkaConfig.java>]
@@ -1227,7 +1237,7 @@ kafka:
 -   Next, in the package com.azrul.ebanking.transaction.web.rest, create a
     controller called TransactionKafkaResource
 
-![](README.images/4iNxtE.jpg)
+![](README.images/ShU3z5.jpg)
 
 [Full source:
 <https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/transaction/web/rest/TransactionKafkaResource.java>]
@@ -1279,7 +1289,9 @@ kafka:
 
 -   We will create folder called truststore and copy our host / local truststore
     (cacerts) in there. This will copy cacerts into the image at
-    /truststore/cacerts
+    /truststore/cacerts. Recall that we can find the truststore as part of the
+    JDK. Please see the stack overflow discussion here:
+    <https://stackoverflow.com/questions/11936685/how-to-obtain-the-location-of-cacerts-of-the-default-java-installation>
 
 ![](README.images/Iu0ZTX.jpg)
 
@@ -1340,381 +1352,461 @@ QL database, this will disable the Hibernate 2nd level cache!
 ) No
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\----------------
+ 
+
+### Specify dependency to Kafka and Vault
+
+-   The dependency of the DepositAccount micro-service is the same as the
+    Transaction micro-service. We will repeat it here anyway for completion
+    purposes
+
+-   Firstly, let us deal with dependencies. In the file
+    \$PROJECTS/DepositAccount/pom.xml, add the dependencies below in the
+    \<dependencies\> \</dependencies\> tag.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>2.4.8.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.4.1</version>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.13</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-vault-config</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Under the same pom.xml file, we also need to add an entry under
+    \<dependencyManagement\>\<dependencies\> …
+    \</dependencies\>\</dependencyManagement\>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   The spring-cloud-starter-vault-config and spring-cloud-dependencies are
+    needed to allow Vault integration
 
  
 
- 
+### Create data model and repository for DespositAccount
+
+-   We will now create a data model for DepositAccount.
+
+-   In the folder \$PROJECTS/DepositAccount/ create a file called
+    **banking.jh**. In there, put the data model below
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+entity DepositAccount{  
+    accountNumber String,  
+    productId String,  
+    openingDate ZonedDateTime,  
+    status Integer,  
+    balance BigDecimal  
+}  
+
+  
+// Set service options to all except few  
+service all with serviceClass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Then, fire up your command line console and point it to the folder
+    \$PROJECTS/DepositAccount. Run the command below:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> jhipster import-jdl ./banking.jh
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   This will create classes such as DepositAccountService that can be used to
+    query and save deposit account data.
 
  
 
- 
+### Coding the DespositAccount micro-service
+
+-   Firstly, we need the same DTO as the Transaction micro-service
+
+-   Create package called com.azrul.ebanking.common.dto and create a class
+    called Transaction in there. Recall that the Transaction class need to
+    implement the Serialisable interface, need to have a default constructor,
+    and need to have equals, hashCode and toString methods :
+
+    ![](README.images/GsJERJ.jpg)
+
+    [Full source code:
+    <https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/DepositAccount/src/main/java/com/azrul/ebanking/common/dto/Transaction.java>]
+
+-   Then we will handle configuration. The configuration of the DepositAccount
+    micro-service is the same as the Transaction micro-service. We will repeat
+    it here anyway for completion purposes. Below is the KafkaConfig class
+
+![](README.images/yh9jDg.jpg)
+
+[Full source:
+<https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/DepositAccount/src/main/java/com/azrul/ebanking/transaction/config/KafkaConfig.java>]
+
+1.  Kafka configuration
+
+    1.  Spring has extensive support for Kafka using the spring-kafka library.
+        This includes serializers and deserializers - which will make message
+        passing type-safe. We, on the other hand, will not be using these
+        serializers/deserializers since we will be encrypting the message before
+        it gets to Kafka on our own. We will opt for a basic String
+        serialiser/deserializer instead.
+
+    2.  This is the KafkaTemplate that we will use to connect to Kafka. Note
+        that we are using a special kind of KafkaTemplate called
+        ReplyingKafkaTemplate. This class will allow us to send a request and
+        get a response without doing too much plumbing on our own
 
  
 
-Build Docker Image
-------------------
+-   We would also need a configuration file. Under the folder
+    \$PROJECTS/DepositAccount/src/main/resources/config, in the file
+    application.yml add:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kafka:
+  bootstrap-servers: kafka-headless.default.svc.cluster.local:9092
+  deposit-debit-request-topic: deposit-debit-request
+  deposit-debit-response-topic: deposit-debit-response
+  consumer:
+    group.id: transaction
+    auto.offset.reset: earliest
+  producer:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Under the folder \$PROJECTS/DepositAccount/src/main/resources/config, in the
+    file bootstrap.yml add the properties below under spring.cloud.
+
+-   In scheme, make sure we put http**s**
+
+-   In host, make sure we put the fully-qualified domain name of ourselves Vault
+    Kubernetes service. Recall the Vault Kubernetes Service paragraph above
+
+-   In both connection-timeout and read-timeout, put a reasonable timeout. We
+    put a big one for testing. Put a small one (say a few seconds) for
+    production
+
+-   In authentication, put TOKEN, to indicate that we will log in via secure
+    token
+
+-   In token, make sure you enter the client_token value from the 'Creating
+    token for both encrypt and decrypt’ paragraph before.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    vault:
+      scheme: https
+      host: vault.default.svc
+      port: 8200
+      connection-timeout: 3600000
+      read-timeout: 3600000
+      authentication: TOKEN
+      token: s.WuTNTDpBqsspinc6dlDN0cbz
+      kv:
+        enabled=true:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  
 
-To generate the missing Docker image(s), please run:
+-   Next we will create a listener. In the package
+    com.azrul.ebanking.depositaccount.service, create a class called Transfer as
+    per below:
 
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:dockerBuild in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/DepositAccount
+![](README.images/RtnLbK.jpg)
 
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:dockerBuild in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Gateway
-
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:dockerBuild in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Transaction
+[Full source code:
+<https://github.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/blob/master/DepositAccount/src/main/java/com/azrul/ebanking/depositaccount/service/Transfer.java>]
 
  
 
+1.  Inject VaultTemplate to allow us to decrypt data coming in and encrypt the
+    return data.
+
+    1.  Inject DespositAccountService to allow us to query and save deposit
+        account data
+
+    2.  This is the actual listener. We will get our encrypted data from the
+        request topic through the input parameter. We ten proceed to decrypt
+        this data into the Transaction object. This object will tell us the
+        source account to debit, the target account to credit and the amount. We
+        will proceed to enact that transaction and calculate the resulting
+        balance in both debited and credited account. We then put the debited
+        account balance back into the message and reply back to the publisher
+        with this edited object.
+
+    3.  This method is the same as the one in Transaction micro service, it is
+        used to encrypt and object
+
+    4.  This method is the same as the one in Transaction micro service, it is
+        used to decrypt and object
+
+     
+
+### Dealing with SSL with self-signed certificate for DepositAccount micro-service
+
+-   Just like the Transaction micro service, we need to do the same thing here
+
+-   We will copy cacerts (recall this discussion on stackoverflow on where the
+    cacerts is available in your system stack overflow:
+    <https://stackoverflow.com/questions/11936685/how-to-obtain-the-location-of-cacerts-of-the-default-java-installation>)
+    to \$PROJECTS/DepositAccounts/src/main/jib/truststore
+
+-   Then, we will need to modify the main method (in the file
+    \$PROJECTS/DepositAccounts/src/main/java/com/azrul/ebanking/depositaccount/DepositAccountApp.java)
+    by adding the code below:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+System.setProperty("javax.net.ssl.trustStore","/truststore/cacerts");
+        System.setProperty("javax.net.ssl.trustStorePassword","changeit");
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![](README.images/UZkvdb.jpg)
+
+[Full source code:
+<https://raw.githubusercontent.com/azrulhasni/Ebanking-JHipster-Kafka-Vault/master/Transaction/src/main/java/com/azrul/ebanking/depositaccount/>DepositAccountApp[.java](.java)]
+
  
 
-**INFO!** Alternatively, you can use Jib to build and push image directly to a
-remote registry:
+Deploying micro-services
+------------------------
 
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/depositaccount in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/DepositAccount
+-   We will use Jib to deploy. Recall the concept of deployment to Kubernetes
+    here
+    [<https://github.com/azrulhasni/Ebanking-JHipster-Keycloak-Nginx-K8#deployment-concept>]
 
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/gateway_kafka in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/gateway_kafka
+-   We will first push our images to Docker Hub (hub.docker.com) and pull them
+    back into our Kubernetes cluster. For this we will need a Docker Hub
+    account. You can register for free.
 
-  ./mvnw -ntp -Pprod -Dmaven.test.skip=true verify jib:build
--Djib.to.image=azrulhasni/transaction in
-/Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Transaction
+ 
 
+### Build images and deploy to Kubernetes
+
+-   Point your command line console to the \$PROJECTS/k8s folder. Run the
+    command
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> jhipster kubernetes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   The choices presented are:
+
+    -   Which \* type \*- choose Microservice application
+
+    -   Enter the root directory - in our case we use (../)
+
+    -   When asked which application do you want to include - choose
+        GatewayKafka, Transaction and DepositAccount
+
+    -   Make sure you enter the registry admin password
+
+    -   For Kubernetes namespace - choose default
+
+    -   For base Docker repository - use your Docker Hub username
+
+    -   To push docker images - choose docker push
+
+    -   For istio - set to No
+
+    -   For Kubernetes service type for edge service - choose LoadBalancer
+
+    -   For dynamic storage provisioning - yes
+
+    -   For storage class, use default storage class - leave the answer empty
+
+-   Once successful you will see the screen below
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Kubernetes configuration successfully generated!
+WARNING! You will need to push your image to a registry. If you have not done so, use the following commands to tag and push the images:
+  docker image tag depositaccount azrulhasni/depositaccount
+  docker push azrulhasni/depositaccount
+  docker image tag gatewaykafka azrulhasni/gatewaykafka
+  docker push azrulhasni/gatewaykafka
+  docker image tag transaction azrulhasni/transaction
+  docker push azrulhasni/transaction
+INFO! Alternatively, you can use Jib to build and push image directly to a remote registry:
+  ./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/depositaccount in /Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/DepositAccount
+  ./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/gatewaykafka in /Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/GatewayKafka
+  ./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/transaction in /Users/azrul/Documents/GitHub/Ebanking-JHipster-Kafka-Vault/Transaction
 You can deploy all your apps by running the following kubectl command:
-
   bash kubectl-apply.sh -f
-
- 
-
-Test
-----
-
- 
-
-### Authenticate
-
-curl -X POST "http://localhost:8080/api/authenticate" -H "accept: \*/\*" -H
-"Content-Type: application/json" -H "Authorization: Bearer " -d "{
-\\"password\\": \\"admin\\", \\"rememberMe\\": true, \\"username\\":
-\\"admin\\"}"
-
- 
-
- 
-
-Vault
------
-
-### Install with TLS
-
-=====
-
-SERVICE=vault
-
- 
-
-\# NAMESPACE where the Vault service is running.
-
-NAMESPACE=default
-
- 
-
-\# SECRET_NAME to create in the Kubernetes secrets store.
-
-SECRET_NAME=vault-server-tls
-
- 
-
-\# TMPDIR is a temporary working directory.
-
-TMPDIR=/tmp
-
-=====
-
-openssl genrsa -out \${TMPDIR}/vault.key 2048
-
-=====
-
-cat \<\<EOF \>\${TMPDIR}/csr.conf
-
-[req]
-
-req_extensions = v3_req
-
-distinguished_name = req_distinguished_name
-
-[req_distinguished_name]
-
-[ v3_req ]
-
-basicConstraints = CA:FALSE
-
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-
-extendedKeyUsage = serverAuth
-
-subjectAltName = \@alt_names
-
-[alt_names]
-
-DNS.1 = \${SERVICE}
-
-DNS.2 = \${SERVICE}.\${NAMESPACE}
-
-DNS.3 = \${SERVICE}.\${NAMESPACE}.svc
-
-DNS.4 = \${SERVICE}.\${NAMESPACE}.svc.cluster.local
-
-IP.1 = 127.0.0.1
-
-EOF
-
-=========
-
-openssl req -new -key \${TMPDIR}/vault.key -subj
-"/CN=\${SERVICE}.\${NAMESPACE}.svc" -out \${TMPDIR}/server.csr -config
-\${TMPDIR}/csr.conf
-
-========
-
-export CSR_NAME=vault-csr
-
-cat \<\<EOF \>\${TMPDIR}/csr.yaml
-
-apiVersion: certificates.k8s.io/v1beta1
-
-kind: CertificateSigningRequest
-
-metadata:
-
-name: \${CSR_NAME}
-
-spec:
-
-groups:
-
--   system:authenticated
-
-request: \$(cat \${TMPDIR}/server.csr \| base64 \| tr -d '\\n')
-
-usages:
-
--   digital signature
-
--   key encipherment
-
--   server auth
-
-EOF
-
-=====
-
-kubectl create -f \${TMPDIR}/csr.yaml
-
-=====
-
-serverCert=\$(kubectl get csr \${CSR_NAME} -o jsonpath='{.status.certificate}')
-
-=====
-
-echo "\${serverCert}" \| openssl base64 -d -A -out \${TMPDIR}/vault.crt
-
- 
-
- 
-
-### Test
-
-curl --header "X-Vault-Token: s.6HAohs85JhXqRlA2aHqLZPpx” --request POST --data
-'{"plaintext":
-"Sm9uLFNub3csNDExMSAxMTExIDExMTEgMTExMSxyZXN0YXVyYW50LCwxODkyMDMwOTAzCg=="}'
-https://127.0.0.1:8200/v1/transit/encrypt/my-encryption-key
-
- 
-
-curl --header "X-Vault-Token: s.6HAohs85JhXqRlA2aHqLZPpx" --request POST --data
-'{"plaintext":
-"Sm9uLFNub3csNDExMSAxMTExIDExMTEgMTExMSxyZXN0YXVyYW50LCwxODkyMDMwOTAzCg=="}' -k
-https://127.0.0.1:8200/v1/transit/encrypt/my-encryption-key
-
- 
-
-curl --header "X-Vault-Token: s.HaQbS7GfuGmWgmgXeFNmZuJr" --request POST --data
-'{"ciphertext":"vault:v1:R2R4Ws0YRo0BHA+eZl0iYXuzipyYDgYM0DrsTyU9OsdWpUWQH0LZP25zHfST+4n6B7J/ADVLp606HAKyWbFOZyXEkRr5DHFXDY/Nv1+i0tQ="}'
---insecure https://127.0.0.1:8200/v1/transit/decrypt/my-encryption-key
-
- 
-
-### Install Vault’s cert into keystone
-
-sudo keytool -import -file "/tmp/vault.crt" -keystore
-"/Library/Java/JavaVirtualMachines/jdk-14.0.2.jdk/Contents/Home/lib/security/cacerts"
--alias "vault certificate"
-
-Password: changeit
-
- 
-
-### Unseal
-
-Initiatialive
-
-\> kubectl exec -ti vault-0 -- vault operator init
-
- 
-
-Q0P=]\\
-
-Unseal Key 1: vdV...3E8
-
-Unseal Key 2: fjG...AG8
-
-Unseal Key 3: zLm...bsP
-
-Unseal Key 4: Pwt...Yw3
-
-Unseal Key 5: orT...PC7
-
- 
-
-Initial Root Token: s.W...Peq
-
- 
-
-Vault initialized with 5 key shares and a key threshold of 3. Please securely
-
-distribute the key shares printed above. When the Vault is re-sealed,
-
-restarted, or stopped, you must supply at least 3 of these keys to unseal it
-
-before it can start servicing requests.
-
-Vault does not store the generated master key. Without at least 3 key to
-
-reconstruct the master key, Vault will remain permanently sealed!
-
-It is possible to generate new unseal keys, provided you have a quorum of
-
-existing unseal keys shares. See "vault operator rekey" for more information.
-
- 
-
-Unseal
-
- 
-
-\> kubectl exec -ti vault-0 -- vault operator unseal \<— Will prompt. Put in 3
-out of 5 keys above
-
- 
-
-Key             Value
-
-\---             -----
-
-Seal Type       shamir
-
-Initialized     true
-
-Sealed          **false**
-
-Total Shares    5
-
-Threshold       3
-
-Version         1.5.2
-
-Cluster Name    vault-cluster-f18e6fcf
-
-Cluster ID      c3cf711c-f2bf-75e8-b115-528741d63499
-
-HA Enabled      false
-
- 
-
-Web interface
-
-\> kubectl port-forward vault-0 8200:8200
-
- 
-
-![](README.images/CfsDoe.jpg)
-
- 
-
-![](README.images/TZFdkc.jpg)
-
- 
-
-![](README.images/hmkmw0.jpg)
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-path "transit/encrypt/my-encryption" {
-  capabilities = [ "update" ]
-}
-
-path "transit/decrypt/my-encryption" {
-  capabilities = [ "update" ]
-}
+[OR]
+If you want to use kustomize configuration, then run the following command:
+  bash kubectl-apply.sh -k
+Use these commands to find your application's IP addresses:
+  kubectl get svc gatewaykafka
+INFO! Congratulations, JHipster execution is complete!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-![](README.images/dSldr1.jpg)
+-   We will be using the Jib version. Point your command line console to
+    \$PROJECTS/DepositAccount
 
-curl --header "X-Vault-Token: s.Wc167JHLx2QGMNJUY4JAePeq" --request POST --data
-'{"plaintext":
-"Sm9uLFNub3csNDExMSAxMTExIDExMTEgMTExMSxyZXN0YXVyYW50LCwxODkyMDMwOTAzCg=="}'
---insecure https://127.0.0.1:8200/v1/transit/encrypt/my-encryption-key
+-   Run the command below. This will push DepositAccount to Docker Hub.
 
- 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/depositaccount
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-{"request_id":"cd97f1fa-1254-ff51-5eac-022d1c30a1d7","lease_id":"","renewable":false,"lease_duration":0,"data":{"ciphertext":"vault:v1:bryhqHJ6yV43qVX95RiUsBuFDJ13Wdn7+td3tA3OMfFTt2i0eH/341tFzmWWrGgAQBLZxOWsB00nRT9wKmuzZ4e1FGO39Blhu3FWwb6oIfU=","key_version":1},"wrap_info":null,"warnings":null,"auth":null}
+-   Then, go to \$PROJECTS/GatewayKafka and run the command below. This will
+    push GatewayKafka to Docker Hub.
 
- 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/gatewaykafka
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 
+-   Lastly, go to \$PROJECTS/Transaction and run the command below. This will
+    push Transaction to Docker Hub.
 
-curl --header "X-Vault-Token: s.Wc167JHLx2QGMNJUY4JAePeq" --request POST --data
-'{"ciphertext":"vault:v1:bryhqHJ6yV43qVX95RiUsBuFDJ13Wdn7+td3tA3OMfFTt2i0eH/341tFzmWWrGgAQBLZxOWsB00nRT9wKmuzZ4e1FGO39Blhu3FWwb6oIfU=“}’
-https://127.0.0.1:8200/v1/transit/decrypt/my-encryption-key
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>./mvnw -ntp -Pprod verify jib:build -Djib.to.image=azrulhasni/transaction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 
+-   Then, go back \$PROJECTS/k8s and run the command below. This will pull all
+    three images above into our Kubernetes cluster.
 
-{
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> bash kubectl-apply.sh -f
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-"request_id":"0c404a2c-fb6f-c239-b98a-4004480ae764",
+-   To verify if the micro-services are deployed properly and running, run the
+    command:
 
-"lease_id":"",
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>kubectl get  pods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-"renewable":false,
+-   You will see the result below. Note that we deploy each micro-service, its
+    corresponding database and also JHipster registry.
 
-"lease_duration":0,
-
-"data":{
-
-"plaintext":"Sm9uLFNub3csNDExMSAxMTExIDExMTEgMTExMSxyZXN0YXVyYW50LCwxODkyMDMwOTAzCg=="
-
-},
-
-"wrap_info":null,
-
-"warnings":null,
-
-}
-
- 
+![](README.images/axFzkF.jpg)
 
  
 
-![](README.images/gDOr2A.jpg)
+Testing micro-services
+----------------------
 
  
--
+
+-   Firstly, we need to install JQ. JQ distribution can be found here
+    <https://stedolan.github.io/jq/download/>
+
+-   Recall our architecture. In order for us to call the Transaction
+    micro-service, we have to go through our Gateway. Recall also that we have
+    chosen JWT authentication when we created our Gateway. Run the command below
+    to create a token for such access. The token will be exported into a
+    variable called TOKEN. Note that we are using the default admin user and
+    password. We should create proper users for production.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> export TOKEN=`curl  -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{  "password": "admin",  "rememberMe": true,  "username": "admin"  }' 'http://localhost:8080/api/authenticate' | jq -r .id_token`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   To verify the token, run:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> echo $TOKEN
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   You should get the response like below
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> echo $TOKEN
+eyJhbGciOiJIUzUxMiJ9...AE2w
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Firstly, we may want to create 2 deposit acconts that we can debit from and
+    credit too. Use the curl command below. We will create an account with the
+    account number 1111 with 10000 as balance.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> curl -X POST "http://localhost:8080/services/depositaccount/api/deposit-accounts" -H "accept: */*" -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "{ \"accountNumber\": \"1111\", \"balance\": 10000, \"openingDate\": \"2020-10-17T11:55:02.749Z\", \"productId\": \"DEPOSIT\", \"status\": 0}"
+
+{"id":1001,"accountNumber":"1111","productId":"DEPOSIT","openingDate":"2020-10-17T11:55:02.749Z","status":0,"balance":10000}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Then create the second account. The account number is 2222 with the balance
+    of 0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> curl -X POST "http://localhost:8080/services/depositaccount/api/deposit-accounts" -H "accept: */*" -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "{ \"accountNumber\": \"2222\", \"balance\": 0, \"openingDate\": \"2020-10-17T11:55:02.749Z\", \"productId\": \"DEPOSIT\", \"status\": 0}"
+
+{"id":1002,"accountNumber":"2222","productId":"DEPOSIT","openingDate":"2020-10-17T11:55:02.749Z","status":0,"balance":0}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+-   Now is the moment of truth. Let us transfer 10 from account 1111 to account
+    2222
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> curl -X POST "http://localhost:8080/services/transaction/api/transaction-kafka/transfer" -H "accept: */*" -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "{ \"amount\": \"10\", \"finalBalance\": \"\", \"fromAccountNumber\": \"1111\", \"toAccountNumber\": \"2222\"}"
+
+{"fromAccountNumber":"1111","toAccountNumber":"2222","amount":"10","finalBalance":"9990.00"}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-   Notice that the finalBalance field is now 9990.
+
+-   You can also run the curl command below to find out the current balance of
+    both accounts:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> curl -X GET "http://localhost:8080/services/depositaccount/api/deposit-accounts" -H "accept: */*" -H "Authorization: Bearer $TOKEN"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You will get the reply below:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[
+  {
+    "id": 1001,
+    "accountNumber": "1111",
+    "productId": "DEPOSIT",
+    "openingDate": "2020-10-17T12:22:57.494Z",
+    "status": 0,
+    "balance": 9990
+  },
+  {
+    "id": 1002,
+    "accountNumber": "2222",
+    "productId": "DEPOSIT",
+    "openingDate": "2020-10-17T12:22:57.494Z",
+    "status": 0,
+    "balance": 10
+  }
+]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+Conclusion
+----------
+
+We started with a simple architecture where we want to send encrypted message
+(and receive a response) from one micro-services to another.
+
+We have explored Kafka, installing it too Kubernetes. We have also explored
+Vault and play around with its functionalities.
+
+Finally, we created 2 micro-services and send an encrypted message from one to
+another and receive a reply. This concludes our tutorial
 
  

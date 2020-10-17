@@ -19,7 +19,7 @@ metadata:
     app: transaction-postgresql
 type: Opaque
 data:
-  postgresql-password: N2IzYWYwNWFlMmNmNmI4YmViOTVmN2ZjZjM3ZmRjYzEyOTFlMDc5NDc0YmRjNDdlOTUwYjVhZjcxZGNm
+  postgresql-password: YzFiODVmMDUwNmJkYWFkMjUyYzg1ZjNiOTQ2OGMzYmY1ZjE3NzcwYzZhMjM5NDAzMWRhMDNkNzFhOTAx
 ---
 apiVersion: apps/v1
 kind: Deployment
